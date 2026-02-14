@@ -588,17 +588,25 @@ function updateStats() {
 }
 
 function generate() {
-    let report = '═══════════════════════════════════════\n';
-    report += 'RESIDENTIAL SECURITY ASSESSMENT REPORT\n';
-    report += '═══════════════════════════════════════\n\n';
+    const today = new Date().toLocaleDateString();
+    let report = '═══════════════════════════════════════════════════════════\n';
+    report += '            RESIDENTIAL SECURITY ASSESSMENT REPORT\n';
+    report += '═══════════════════════════════════════════════════════════\n\n';
+    report += `Assessment Date: ${today}\n\n`;
     
-    report += 'PROPERTY INFORMATION:\n';
-    const propFields = ['propName', 'address', 'sqft', 'threat'];
+    report += '─────────────────────────────────────────────────────────────\n';
+    report += 'PROPERTY INFORMATION\n';
+    report += '─────────────────────────────────────────────────────────────\n';
+    const propFields = ['propName', 'address', 'sqft', 'acreage', 'propType', 'threat', 'industry', 'media'];
     propFields.forEach(f => {
         const field = SECTIONS.property.fields.find(fld => fld.id === f);
-        if (field) report += `${field.label}: ${data[f] || 'N/A'}\n`;
+        if (field) {
+            const value = data[f] || 'Not specified';
+            report += `${field.label}: ${value}\n`;
+        }
     });
 
+    // Collect all findings
     let findings = [];
     Object.values(SECTIONS).forEach(sec => {
         if (sec.subs) {
@@ -622,13 +630,63 @@ function generate() {
     });
 
     const critical = findings.filter(f => f.r.s === 'critical');
-    report += `\nASSESSMENT SUMMARY:\n`;
-    report += `Items Assessed: ${findings.length}\n`;
-    report += `Critical Issues: ${critical.length}\n\n`;
+    const important = findings.filter(f => f.r.s === 'important');
+    const recommended = findings.filter(f => f.r.s === 'recommended');
+    const good = findings.filter(f => f.r.s === 'good');
+    
+    report += `\n─────────────────────────────────────────────────────────────\n`;
+    report += 'ASSESSMENT SUMMARY\n';
+    report += '─────────────────────────────────────────────────────────────\n';
+    report += `Total Items Assessed: ${findings.length}\n`;
+    report += `Critical Issues (Immediate Action): ${critical.length}\n`;
+    report += `Important Issues (Priority Upgrade): ${important.length}\n`;
+    report += `Recommended Improvements: ${recommended.length}\n`;
+    report += `Good Ratings: ${good.length}\n`;
+    
+    const completionPct = Math.round((findings.length / 133) * 100);
+    report += `\nCompletion Status: ${completionPct}% (${findings.length} of 133 items)\n`;
 
+    // Critical Findings Section
     if (critical.length > 0) {
-        report += 'CRITICAL FINDINGS:\n\n';
+        report += `\n\n═══════════════════════════════════════════════════════════\n`;
+        report += '                    CRITICAL FINDINGS\n';
+        report += '              IMMEDIATE ACTION REQUIRED\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
         critical.forEach((f, i) => {
+            report += `${i+1}. ${f.q}\n`;
+            report += `   Section: ${f.section} → ${f.subsection}\n`;
+            report += `   Current Status: ${f.v.toUpperCase()}\n`;
+            report += `   Recommendation: ${f.r.t}\n`;
+            if (f.n) report += `   Notes: ${f.n}\n`;
+            report += '\n';
+        });
+    }
+
+    // Important Findings Section
+    if (important.length > 0) {
+        report += `\n═══════════════════════════════════════════════════════════\n`;
+        report += '                   IMPORTANT FINDINGS\n';
+        report += '                PRIORITY UPGRADES NEEDED\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
+        important.forEach((f, i) => {
+            report += `${i+1}. ${f.q}\n`;
+            report += `   Section: ${f.section} → ${f.subsection}\n`;
+            report += `   Current Status: ${f.v.toUpperCase()}\n`;
+            report += `   Recommendation: ${f.r.t}\n`;
+            if (f.n) report += `   Notes: ${f.n}\n`;
+            report += '\n';
+        });
+    }
+
+    // Recommended Improvements Section
+    if (recommended.length > 0) {
+        report += `\n═══════════════════════════════════════════════════════════\n`;
+        report += '              RECOMMENDED IMPROVEMENTS\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
+        recommended.forEach((f, i) => {
             report += `${i+1}. ${f.q}\n`;
             report += `   ${f.r.t}\n`;
             if (f.n) report += `   Notes: ${f.n}\n`;
@@ -636,11 +694,43 @@ function generate() {
         });
     }
 
+    // Good Ratings Section
+    if (good.length > 0) {
+        report += `\n═══════════════════════════════════════════════════════════\n`;
+        report += '                  ADEQUATE MEASURES\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
+        good.forEach((f, i) => {
+            report += `${i+1}. ${f.q}\n`;
+            report += `   ${f.r.t}\n`;
+            if (f.n) report += `   Notes: ${f.n}\n`;
+            report += '\n';
+        });
+    }
+
+    report += '\n═══════════════════════════════════════════════════════════\n';
+    report += '                    END OF REPORT\n';
+    report += '═══════════════════════════════════════════════════════════\n';
+    report += `Generated: ${today}\n`;
+    report += 'Security Assessment Professional Evaluation Tool\n';
+
+    // Create downloadable file
+    const blob = new Blob([report], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const fileName = `Security_Assessment_${data.propName || 'Report'}_${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = fileName.replace(/[^a-z0-9._-]/gi, '_');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Also copy to clipboard
     navigator.clipboard.writeText(report).then(() => {
-        alert('✅ Report Generated & Copied to Clipboard!\n\nPaste into Notes, Email, or any document.');
+        showToast('✅ Report downloaded & copied to clipboard!');
     }).catch(() => {
-        alert('📄 Report Generated!\n\nSee console for full report.');
-        console.log(report);
+        showToast('✅ Report downloaded!');
     });
 }
 
