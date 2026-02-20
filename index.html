@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,8 @@
     <meta name="theme-color" content="#0a2540">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%230a2540' width='180' height='180' rx='40'/%3E%3Ctext y='130' x='90' text-anchor='middle' font-size='100' fill='white'%3E🛡️%3C/text%3E%3C/svg%3E">
     <title>Security Assessment - Complete</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         :root { --primary: #0a2540; --accent: #00d4ff; --success: #00c896; --warning: #ffb020; --danger: #ff4757; --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b; --text-light: #64748b; }
@@ -1314,26 +1317,12 @@ function updateStats() {
     if (statTotal) statTotal.textContent = total;
 }
 
-function generate() {
+async function generate() {
     const today = new Date().toLocaleDateString();
-    let report = '═══════════════════════════════════════════════════════════\n';
-    report += '            RESIDENTIAL SECURITY ASSESSMENT REPORT\n';
-    report += '═══════════════════════════════════════════════════════════\n\n';
-    report += `Assessment Date: ${today}\n\n`;
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
     
-    report += '─────────────────────────────────────────────────────────────\n';
-    report += 'PROPERTY INFORMATION\n';
-    report += '─────────────────────────────────────────────────────────────\n';
-    const propFields = ['propName', 'address', 'sqft', 'acreage', 'propType', 'threat', 'industry', 'media'];
-    propFields.forEach(f => {
-        const field = SECTIONS.property.fields.find(fld => fld.id === f);
-        if (field) {
-            const value = data[f] || 'Not specified';
-            report += `${field.label}: ${value}\n`;
-        }
-    });
-
-    // Collect all findings
+    // Collect findings
     let findings = [];
     Object.values(SECTIONS).forEach(sec => {
         if (sec.subs) {
@@ -1362,105 +1351,317 @@ function generate() {
     const good = findings.filter(f => f.r.s === 'good');
     const na = findings.filter(f => f.r.s === 'na');
     
-    report += `\n─────────────────────────────────────────────────────────────\n`;
-    report += 'ASSESSMENT SUMMARY\n';
-    report += '─────────────────────────────────────────────────────────────\n';
-    report += `Total Items Assessed: ${findings.length}\n`;
-    report += `Critical Issues (Immediate Action): ${critical.length}\n`;
-    report += `Important Issues (Priority Upgrade): ${important.length}\n`;
-    report += `Recommended Improvements: ${recommended.length}\n`;
-    report += `Good Ratings: ${good.length}\n`;
-    report += `Not Applicable: ${na.length}\n`;
+    let pageNum = 1;
     
-    const completionPct = Math.round((findings.length / 133) * 100);
-    report += `\nCompletion Status: ${completionPct}% (${findings.length} of 133 items)\n`;
-
-    // Critical Findings Section
-    if (critical.length > 0) {
-        report += `\n\n═══════════════════════════════════════════════════════════\n`;
-        report += '                    CRITICAL FINDINGS\n';
-        report += '              IMMEDIATE ACTION REQUIRED\n';
-        report += '═══════════════════════════════════════════════════════════\n\n';
-        
-        critical.forEach((f, i) => {
-            report += `${i+1}. ${f.q}\n`;
-            report += `   Section: ${f.section} → ${f.subsection}\n`;
-            report += `   Current Status: ${f.v.toUpperCase()}\n`;
-            report += `   Recommendation: ${f.r.t}\n`;
-            if (f.n) report += `   Notes: ${f.n}\n`;
-            report += '\n';
-        });
-    }
-
-    // Important Findings Section
-    if (important.length > 0) {
-        report += `\n═══════════════════════════════════════════════════════════\n`;
-        report += '                   IMPORTANT FINDINGS\n';
-        report += '                PRIORITY UPGRADES NEEDED\n';
-        report += '═══════════════════════════════════════════════════════════\n\n';
-        
-        important.forEach((f, i) => {
-            report += `${i+1}. ${f.q}\n`;
-            report += `   Section: ${f.section} → ${f.subsection}\n`;
-            report += `   Current Status: ${f.v.toUpperCase()}\n`;
-            report += `   Recommendation: ${f.r.t}\n`;
-            if (f.n) report += `   Notes: ${f.n}\n`;
-            report += '\n';
-        });
-    }
-
-    // Recommended Improvements Section
-    if (recommended.length > 0) {
-        report += `\n═══════════════════════════════════════════════════════════\n`;
-        report += '              RECOMMENDED IMPROVEMENTS\n';
-        report += '═══════════════════════════════════════════════════════════\n\n';
-        
-        recommended.forEach((f, i) => {
-            report += `${i+1}. ${f.q}\n`;
-            report += `   ${f.r.t}\n`;
-            if (f.n) report += `   Notes: ${f.n}\n`;
-            report += '\n';
-        });
-    }
-
-    // Good Ratings Section
-    if (good.length > 0) {
-        report += `\n═══════════════════════════════════════════════════════════\n`;
-        report += '                  ADEQUATE MEASURES\n';
-        report += '═══════════════════════════════════════════════════════════\n\n';
-        
-        good.forEach((f, i) => {
-            report += `${i+1}. ${f.q}\n`;
-            report += `   ${f.r.t}\n`;
-            if (f.n) report += `   Notes: ${f.n}\n`;
-            report += '\n';
-        });
-    }
-
-    report += '\n═══════════════════════════════════════════════════════════\n';
-    report += '                    END OF REPORT\n';
-    report += '═══════════════════════════════════════════════════════════\n';
-    report += `Generated: ${today}\n`;
-    report += 'Security Assessment Professional Evaluation Tool\n';
-
-    // Create downloadable file
-    const blob = new Blob([report], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const fileName = `Security_Assessment_${data.propName || 'Report'}_${new Date().toISOString().split('T')[0]}.txt`;
-    a.download = fileName.replace(/[^a-z0-9._-]/gi, '_');
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Helper function for page footer
+    const addFooter = () => {
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`Page ${pageNum}`, 105, 285, { align: 'center' });
+        doc.setTextColor(200, 0, 0);
+        doc.text('CONFIDENTIAL', 20, 285);
+        pageNum++;
+    };
     
-    // Also copy to clipboard
-    navigator.clipboard.writeText(report).then(() => {
-        showToast('✅ Report downloaded & copied to clipboard!');
-    }).catch(() => {
-        showToast('✅ Report downloaded!');
+    // ===== COVER PAGE =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 0, 220, 50, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(28);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Residential Security Assessment', 105, 25, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text('Executive Summary Report', 105, 35, { align: 'center' });
+    
+    doc.setTextColor(200, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CONFIDENTIAL', 105, 60, { align: 'center' });
+    
+    // Property info box
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    let yPos = 80;
+    doc.text('Property:', 30, yPos);
+    doc.text(data.propName || 'Not specified', 80, yPos);
+    yPos += 8;
+    doc.text('Address:', 30, yPos);
+    doc.text(data.address || 'Not specified', 80, yPos);
+    yPos += 8;
+    doc.text('Assessment Date:', 30, yPos);
+    doc.text(today, 80, yPos);
+    yPos += 8;
+    doc.text('Threat Level:', 30, yPos);
+    doc.text(data.threat || 'Not specified', 80, yPos);
+    
+    // Legal Disclaimer Box
+    doc.setDrawColor(200, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.rect(20, 130, 170, 90);
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(200, 0, 0);
+    doc.text('LEGAL DISCLAIMER', 105, 140, { align: 'center' });
+    
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    const disclaimer = [
+        'This security assessment is provided for informational purposes only and does not constitute',
+        'a guarantee of safety or security. The assessor makes no warranties, express or implied,',
+        'regarding the completeness, accuracy, or effectiveness of the recommendations herein.',
+        '',
+        'LIMITATION OF LIABILITY: The assessor shall not be liable for any direct, indirect, incidental,',
+        'consequential, or punitive damages arising from use of this report or implementation of',
+        'recommendations. Client assumes all risk and responsibility for security decisions.',
+        '',
+        'NO GUARANTEE: Security measures reduce but cannot eliminate risk. No security system is',
+        'impenetrable. Criminal activity may occur despite implementation of recommendations.',
+        '',
+        'PROFESSIONAL ADVICE: This report does not constitute legal, insurance, or professional',
+        'advice. Client should consult appropriate licensed professionals before implementing',
+        'recommendations. Compliance with local codes and regulations is client\'s responsibility.',
+        '',
+        'INDEMNIFICATION: Client agrees to indemnify and hold harmless the assessor from any',
+        'claims, damages, or liabilities arising from use of this report or security incidents.',
+    ];
+    
+    let disclaimerY = 148;
+    disclaimer.forEach(line => {
+        doc.text(line, 25, disclaimerY, { maxWidth: 160 });
+        disclaimerY += 4;
     });
+    
+    addFooter();
+    doc.addPage();
+    
+    // ===== EXECUTIVE SUMMARY =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Executive Summary', 105, 18, { align: 'center' });
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPos = 35;
+    
+    const summaryText = [
+        `This comprehensive security assessment evaluated ${findings.length} security parameters across`,
+        `six critical areas. The assessment identified ${critical.length} critical vulnerabilities requiring`,
+        `immediate attention and ${important.length} important issues needing priority remediation.`,
+        '',
+        `Assessment Results:`,
+        `  • ${good.length} items meet or exceed industry standards (${Math.round(good.length/findings.length*100)}%)`,
+        `  • ${recommended.length} items partially comply and require enhancement`,
+        `  • ${important.length} items represent significant security gaps`,
+        `  • ${critical.length} items are critical vulnerabilities`,
+        `  • ${na.length} items not applicable to this property`,
+    ];
+    
+    summaryText.forEach(line => {
+        doc.text(line, 20, yPos);
+        yPos += 6;
+    });
+    
+    // Create pie chart for compliance overview
+    yPos += 10;
+    const chartCanvas = document.createElement('canvas');
+    chartCanvas.width = 400;
+    chartCanvas.height = 400;
+    
+    const pieChart = new Chart(chartCanvas, {
+        type: 'pie',
+        data: {
+            labels: ['Compliant', 'Partial', 'Non-Compliant', 'N/A'],
+            datasets: [{
+                data: [good.length, recommended.length + important.length, critical.length, na.length],
+                backgroundColor: ['#00c896', '#ffb020', '#ff4757', '#94a3b8'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 14 }, padding: 15 } },
+                title: { display: true, text: 'Security Compliance Overview', font: { size: 16, weight: 'bold' } }
+            }
+        }
+    });
+    
+    // Wait for chart to render
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const chartImage = chartCanvas.toDataURL('image/png');
+    doc.addImage(chartImage, 'PNG', 40, yPos, 130, 130);
+    
+    addFooter();
+    doc.addPage();
+    
+    // ===== CRITICAL FINDINGS =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Critical Findings & Recommendations', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    
+    if (critical.length > 0) {
+        critical.slice(0, 8).forEach((f, i) => {
+            if (yPos > 240) {
+                addFooter();
+                doc.addPage();
+                yPos = 25;
+            }
+            
+            doc.setFillColor(255, 229, 229);
+            doc.rect(15, yPos - 5, 180, 8, 'F');
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(200, 0, 0);
+            doc.text(`Finding #${i+1} [CRITICAL]`, 20, yPos);
+            yPos += 8;
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Issue:', 20, yPos);
+            doc.setFont('helvetica', 'normal');
+            const issueLines = doc.splitTextToSize(f.q, 160);
+            doc.text(issueLines, 40, yPos);
+            yPos += (issueLines.length * 5) + 3;
+            
+            doc.setFont('helvetica', 'bold');
+            doc.text('Recommendation:', 20, yPos);
+            doc.setFont('helvetica', 'normal');
+            const recLines = doc.splitTextToSize(f.r.t, 140);
+            doc.text(recLines, 50, yPos);
+            yPos += (recLines.length * 4) + 2;
+            
+            if (f.n) {
+                doc.setFont('helvetica', 'italic');
+                doc.text('Notes: ' + f.n, 20, yPos);
+                yPos += 5;
+            }
+            
+            yPos += 8;
+        });
+    } else {
+        doc.setFontSize(10);
+        doc.text('No critical findings identified.', 20, yPos);
+    }
+    
+    addFooter();
+    
+    // ===== SECTION BREAKDOWN =====
+    doc.addPage();
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Detailed Section Assessment', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    
+    // Group findings by section
+    const sectionGroups = {};
+    findings.forEach(f => {
+        if (!sectionGroups[f.section]) sectionGroups[f.section] = [];
+        sectionGroups[f.section].push(f);
+    });
+    
+    Object.keys(sectionGroups).forEach(section => {
+        if (yPos > 250) {
+            addFooter();
+            doc.addPage();
+            yPos = 25;
+        }
+        
+        const items = sectionGroups[section];
+        const sectionGood = items.filter(f => f.r.s === 'good').length;
+        const sectionTotal = items.length;
+        const compliance = Math.round((sectionGood / sectionTotal) * 100);
+        
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(46, 117, 182);
+        doc.text(section, 20, yPos);
+        yPos += 7;
+        
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Compliance Rate: ${compliance}% | Total: ${sectionTotal} | Compliant: ${sectionGood}`, 20, yPos);
+        yPos += 10;
+    });
+    
+    addFooter();
+    
+    // ===== RECOMMENDATIONS SUMMARY =====
+    doc.addPage();
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Implementation Priorities', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const priorities = [
+        '',
+        'IMMEDIATE ACTIONS (0-30 Days):',
+        `  • Address ${critical.length} critical vulnerabilities identified`,
+        '  • Engage licensed security contractors for quotes',
+        '  • Prioritize perimeter and access control improvements',
+        '  • Implement professional alarm monitoring',
+        '',
+        'PRIORITY ENHANCEMENTS (30-90 Days):',
+        `  • Remediate ${important.length} important security gaps`,
+        '  • Install comprehensive camera surveillance system',
+        '  • Upgrade door and window security hardware',
+        '  • Establish emergency response protocols',
+        '',
+        'ONGOING IMPROVEMENTS (90+ Days):',
+        '  • Complete remaining recommended enhancements',
+        '  • Implement operational security protocols',
+        '  • Conduct staff security training',
+        '  • Schedule follow-up assessment in 6-12 months',
+        '',
+        'NEXT STEPS:',
+        '  1. Review findings with stakeholders',
+        '  2. Obtain detailed contractor quotes',
+        '  3. Develop phased implementation timeline',
+        '  4. Establish maintenance protocols',
+        '  5. Document all improvements for insurance',
+    ];
+    
+    priorities.forEach(line => {
+        doc.text(line, 20, yPos);
+        yPos += 6;
+    });
+    
+    addFooter();
+    
+    // Save the PDF
+    const fileName = `Security_Assessment_${data.propName || 'Report'}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName.replace(/[^a-z0-9._-]/gi, '_'));
+    
+    showToast('✅ Professional PDF report generated!');
 }
 
 function clearData() {
