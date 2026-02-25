@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Security Pro">
+    <meta name="theme-color" content="#0a2540">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%230a2540' width='180' height='180' rx='40'/%3E%3Ctext y='130' x='90' text-anchor='middle' font-size='100' fill='white'%3E🛡️%3C/text%3E%3C/svg%3E">
+    <title>Security Assessment | Executive Protection</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        :root { --primary: #0a2540; --accent: #00d4ff; --success: #00c896; --warning: #ffb020; --danger: #ff4757; --bg: #f8fafc; --card: #fff; --border: #e2e8f0; --text: #1e293b; --text-light: #64748b; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 140px; }
+        .header { background: linear-gradient(135deg, var(--primary) 0%, #1a3a5f 100%); color: white; padding: max(env(safe-area-inset-top, 20px), 20px) 20px 16px 20px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .header h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+        .header p { font-size: 0.8rem; opacity: 0.9; margin-bottom: 10px; }
+        .install-banner { background: rgba(0, 212, 255, 0.15); padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--accent); font-size: 0.75rem; display: none; margin-bottom: 10px; }
+        .install-banner.show { display: block; }
+        .progress-wrapper { margin-top: 10px; }
+        .progress-bar { background: rgba(255,255,255,0.2); height: 5px; border-radius: 3px; overflow: hidden; }
+        .progress-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px rgba(0,212,255,0.6); }
+        .progress-text { font-size: 0.7rem; margin-top: 5px; opacity: 0.95; }
+        .tabs { background: white; padding: 10px 0; overflow-x: auto; -webkit-overflow-scrolling: touch; white-space: nowrap; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 99; }
+        .tab { display: inline-block; padding: 8px 14px; margin: 0 3px; background: var(--bg); border-radius: 18px; font-size: 0.8rem; font-weight: 600; color: var(--text-light); border: 2px solid var(--border); cursor: pointer; transition: all 0.2s; }
+        .tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .content { padding: 14px; }
+        .section-title { font-size: 1.3rem; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .section-desc { font-size: 0.8rem; color: var(--text-light); margin-bottom: 16px; }
+        .subsection { font-size: 1rem; font-weight: 600; color: var(--primary); margin: 20px 0 10px 0; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+        .form-group { margin-bottom: 16px; }
+        .label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.85rem; }
+        input, select, textarea { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 16px; font-family: inherit; background: white; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+        textarea { min-height: 80px; resize: vertical; }
+        .card { background: white; border-radius: 10px; padding: 14px; margin-bottom: 14px; border: 2px solid var(--border); box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+        .question { font-weight: 600; margin-bottom: 10px; font-size: 0.9rem; line-height: 1.4; }
+        .toggle-btns { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+        .toggle-btn { padding: 12px 6px; border: 2px solid var(--border); background: white; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .toggle-btn:active { transform: scale(0.97); }
+        .toggle-btn.yes.active { background: var(--success); border-color: var(--success); color: white; }
+        .toggle-btn.partial.active { background: var(--warning); border-color: var(--warning); color: white; }
+        .toggle-btn.no.active { background: var(--danger); border-color: var(--danger); color: white; }
+        .toggle-btn.na.active { background: var(--text-light); border-color: var(--text-light); color: white; }
+        .rec { margin-top: 10px; padding: 10px; background: var(--bg); border-radius: 6px; border-left: 3px solid var(--accent); font-size: 0.8rem; line-height: 1.5; display: none; }
+        .rec.show { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 5px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.3px; }
+        .badge-critical { background: #fee; color: #c00; }
+        .badge-important { background: #fff4e6; color: #d97706; }
+        .badge-recommended { background: #e0f2fe; color: #0369a1; }
+        .badge-good { background: #d1fae5; color: #065f46; }
+        .badge-na { background: #f1f5f9; color: #64748b; }
+        .notes { width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 6px; font-size: 13px; font-family: inherit; min-height: 60px; margin-top: 10px; resize: vertical; }
+        .notes:focus { outline: none; border-color: var(--accent); }
+        .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 10px 14px; padding-bottom: max(env(safe-area-inset-bottom, 10px), 10px); border-top: 1px solid var(--border); box-shadow: 0 -4px 12px rgba(0,0,0,0.08); z-index: 100; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 8px; }
+        .stat { text-align: center; padding: 5px; background: var(--bg); border-radius: 6px; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.6rem; color: var(--text-light); text-transform: uppercase; }
+        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+        .btn { padding: 12px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--success); color: white; box-shadow: 0 3px 10px rgba(0,200,150,0.25); }
+        .btn-secondary { background: var(--primary); color: white; box-shadow: 0 3px 10px rgba(10,37,64,0.25); }
+        .toast { position: fixed; bottom: 130px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 10px 16px; border-radius: 6px; font-size: 0.8rem; display: none; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .toast.show { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <div id="toast" class="toast"></div>
+    <script>
+// Due to file size constraints, this is a complete working version with dynamic recommendation generation
+// Full 60+ item assessment matching your 26-page document
+
+let data = JSON.parse(localStorage.getItem('securityAssessment') || '{}');
+let currentTab = 'threat';
+
+// Complete assessment structure with enhanced threat assessment
+const SECTIONS = {
+    threat: {
+        title: '⚠️ Threat Assessment',
+        desc: 'Threat profile & behavioral indicators',
+        subs: [
+            {
+                name: 'Known Threats & Historical Incidents',
+                items: [
+                    'threatcomm|Threatening communications received (letters, emails, calls, social media)',
+                    'restraining|Active restraining orders or protective orders in place',
+                    'stalking|Evidence of stalking, surveillance, or obsessive pursuit behavior',
+                    'physical|Prior physical confrontations or assault attempts',
+                    'propincident|Previous incidents at this or other properties (intrusion, vandalism)',
+                    'doxxing|Doxxing incidents (personal info published online maliciously)',
+                    'swatting|Swatting attempts or false emergency calls to this address'
+                ]
+            },
+            {
+                name: 'Relationship & Personal Threat Factors',
+                items: [
+                    'custody|Contentious custody dispute or family court proceedings',
+                    'domestic|Domestic violence history or intimate partner concerns',
+                    'divorce|High-conflict divorce or separation with threat indicators',
+                    'terminated|Recently terminated employees with expressed grievances',
+                    'litigation|High-profile litigation with personal animosity',
+                    'business|Business disputes with threatening behavior or retaliation risk'
+                ]
+            },
+            {
+                name: 'Public Profile & Media Exposure',
+                items: [
+                    'profile|Public figure status (executive, celebrity, athlete, politician)',
+                    'controversy|Involvement in public controversy or polarizing issues',
+                    'medianega|Negative media coverage or targeted campaigns',
+                    'paparazzi|Paparazzi harassment or invasive photography',
+                    'socialmedia|Social media harassment, trolling, or coordinated attacks',
+                    'followers|Concerning followers or fans displaying fixation behaviors',
+                    'impersonation|Social media impersonation or identity theft attempts'
+                ]
+            },
+            {
+                name: 'Behavioral Threat Indicators',
+                items: [
+                    'escalation|Observable escalation pattern in concerning behaviors',
+                    'fixation|Individual(s) displaying fixation or obsessive interest',
+                    'pathway|Evidence of attack planning or surveillance activities',
+                    'leakage|"Leakage" of violent intent (statements, writings, online posts)',
+                    'lastresort|Individual expressing "last resort" or grievance-driven thinking',
+                    'weaponaccess|Known or suspected weapons access by concerning individual'
+                ]
+            },
+            {
+                name: 'Digital & Information Security Threats',
+                items: [
+                    'dataleak|Personal information leaked or available online',
+                    'hacking|Evidence of hacking attempts or account compromises',
+                    'phishing|Phishing or social engineering attempts targeting family/staff',
+                    'threatdarkweb|Personal information found on dark web or threat forums',
+                    'geolocation|Real-time location tracking concerns (phone, vehicle, apps)'
+                ]
+            }
+        ]
+    },
+    property: {
+        title: '🏠 Property',
+        desc: 'Property information & client profile',
+        fields: [
+            {id:'propName',label:'Property Name/Identifier',type:'text'},
+            {id:'address',label:'Address/Location',type:'text'},
+            {id:'sqft',label:'Square Footage',type:'text'},
+            {id:'acreage',label:'Acreage/Lot Size',type:'text'},
+            {id:'propType',label:'Property Type',type:'text',placeholder:'Estate, compound, etc.'},
+            {id:'structures',label:'Structures on Property',type:'textarea'},
+            {id:'residents',label:'Primary Residents',type:'textarea'},
+            {id:'staff',label:'Household Staff',type:'textarea'},
+            {id:'threat',label:'Threat Level',type:'select',options:['Low','Medium','High','Critical']},
+            {id:'threats',label:'Known Threat History',type:'textarea'},
+            {id:'industry',label:'Industry/Sector',type:'text'},
+            {id:'media',label:'Media Attention',type:'select',options:['None','Occasional','Frequent','Persistent']}
+        ]
+    },
+    perimeter: {
+        title: '🛡️ Perimeter',
+        desc: 'Perimeter & site security (CPTED)',
+        subs: [
+            {
+                name: 'Property Boundaries',
+                items: [
+                    'boundaries|Property boundaries clearly defined with permanent barriers',
+                    'anticlimb|Anti-climb features installed (wall toppers, security spikes)',
+                    'anticut|Anti-cut features on fencing (reinforced mesh, steel core)',
+                    'signage|Private property/no trespassing signage legally compliant',
+                    'standoff|Adequate standoff distance from road (minimum 30ft)'
+                ]
+            },
+            {
+                name: 'Access Points & Entry Control',
+                items: [
+                    'gates|All vehicle entries gated with intercom/camera',
+                    'crash|Crash-rated barriers/bollards at primary entrance (K4/K8/K12)',
+                    'pedgates|Pedestrian gates separate from vehicle access',
+                    'choke|Driveway includes chokepoint/speed control (serpentine, bumps)',
+                    'service|Service/delivery entry separate from primary entrance',
+                    'emergency|Emergency vehicle access maintained',
+                    'lpr|License plate recognition (LPR) system installed'
+                ]
+            },
+            {
+                name: 'Perimeter Detection & Monitoring',
+                items: [
+                    'detection|Perimeter intrusion detection system installed',
+                    'cameras|Perimeter cameras - complete coverage, no blind spots',
+                    'motiondet|Motion-activated deterrents (lights, audio, sirens)',
+                    'analytics|Video analytics enabled (AI person/vehicle detection)'
+                ]
+            },
+            {
+                name: 'Lighting & Visibility',
+                items: [
+                    'lighting|All approaches adequately lit (minimum 5 foot-candles)',
+                    'motionlight|Motion-activated LED floods at critical zones',
+                    'nodark|No dark zones or concealment areas (100% visibility)',
+                    'lightpos|Lighting positioned to illuminate faces (no backlighting)',
+                    'backup|Emergency/backup lighting operational',
+                    'tamper|Lighting controls secured against tampering'
+                ]
+            },
+            {
+                name: 'Landscaping & Natural Surveillance',
+                items: [
+                    'trimmed|Bushes/shrubs trimmed below 3ft near windows',
+                    'trees|Tree canopies raised above 10ft (clear sightlines)',
+                    'noclimb|Vegetation does not provide climbing aids to upper floors',
+                    'defensive|Defensive landscaping employed (thorny plants)',
+                    'maintain|Regular maintenance program prevents overgrowth',
+                    'hardscape|Hardscape elements do not create blind spots'
+                ]
+            },
+            {
+                name: 'Privacy & Counter-Surveillance',
+                items: [
+                    'neighbor|Neighbor/public line-of-sight managed (privacy screening)',
+                    'aerial|Elevated/aerial exposure mitigated (drone detection)',
+                    'windowtreat|Window treatments prevent interior visibility',
+                    'antidrone|Anti-drone technology deployed',
+                    'perimcountersurv|Counter-surveillance awareness program active'
+                ]
+            }
+        ]
+    },
+    building: {
+        title: '🏗️ Building',
+        desc: 'Building envelope & structural security',
+        subs: [
+            {
+                name: 'Exterior Doors',
+                items: [
+                    'solid|All exterior doors solid-core or steel (18-gauge minimum)',
+                    'deadbolts|Grade 1 deadbolts on all exterior doors (ANSI/BHMA)',
+                    'frames|Door frames reinforced with steel strike plates',
+                    'hinges|Door hinges protected (set pins on inswing, security hinges)',
+                    'viewers|Door viewers/peepholes installed at accessible heights',
+                    'glass|Glass panels in/near doors protected (film, reinforced)',
+                    'french|French doors secured with flush bolts and astragal',
+                    'smart|Smart lock audit trail enabled (tracking entry/exit)'
+                ]
+            },
+            {
+                name: 'Windows & Glazing',
+                items: [
+                    'windowfilm|Ground-level windows reinforced (8mil+ security film)',
+                    'winsensors|Window sensors on all accessible openings',
+                    'sliding|Sliding glass doors secured (bar, foot lock, anti-lift)',
+                    'winsecondary|Accessible windows have secondary locks',
+                    'glassbreak|Glass-break sensors deployed in vulnerable areas',
+                    'casement|Casement windows have upgraded locking mechanisms',
+                    'basement|Basement/below-grade windows protected (bars, covers)',
+                    'filminstall|Security film professionally installed with frame anchoring'
+                ]
+            },
+            {
+                name: 'Garage & Secondary Structures',
+                items: [
+                    'garagecode|Garage opener uses rolling code technology',
+                    'garagemanual|Manual garage door locks installed as backup',
+                    'garagehouse|Garage-to-house door treated as exterior door',
+                    'garagewindows|Garage interior not visible from exterior',
+                    'outbuildings|Outbuildings secured and monitored (alarms/cameras)',
+                    'mechanical|Mechanical/utility rooms secured'
+                ]
+            },
+            {
+                name: 'Roof & Upper-Level Access',
+                items: [
+                    'roof|Roof access points secured (hatches locked, skylights reinforced)',
+                    'noclimb_features|No climbable features near upper floors',
+                    'balconies|Balconies secured (locks, height prevents climbing)',
+                    'fire_escape|Fire escapes secured against unauthorized use',
+                    'roof_edge|Roof edge protection prevents scaling'
+                ]
+            }
+        ]
+    },
+    interior: {
+        title: '🚪 Interior',
+        desc: 'Interior security & safe haven',
+        subs: [
+            {
+                name: 'Safe Room / Hardened Refuge',
+                items: [
+                    'saferoom|Dedicated safe room exists (purpose-built hardened space)',
+                    'safedoor|Safe room door steel-reinforced with Grade 1 deadbolt',
+                    'safecomm|Independent communication in safe room (cell/VoIP/landline)',
+                    'panic|Panic alarm button in safe room (silent alarm to police)',
+                    'supplies|Emergency supplies stored (water, food, first aid for 24-72hr)'
+                ]
+            },
+            {
+                name: 'Interior Delay & Hardening',
+                items: [
+                    'bedroom|Primary bedroom door solid-core with reinforced frame',
+                    'children|Children\'s room doors upgraded (solid core, locks)',
+                    'chokepoints|Interior chokepoints identifiable (hallways, stairs)',
+                    'intmotion|Interior motion sensors cover critical pathways'
+                ]
+            },
+            {
+                name: 'Emergency Response Capability',
+                items: [
+                    'panicmultiple|Panic buttons in key locations (bedrooms, kitchen)',
+                    'intmedical|Emergency medical supplies accessible (trauma kit, AED)',
+                    'fire|Fire suppression/detection in all areas (monitored)',
+                    'evacplan|Emergency evacuation plan documented and practiced',
+                    'contacts|Emergency contact list posted in safe room'
+                ]
+            }
+        ]
+    },
+    crisis: {
+        title: '🚨 Crisis Management',
+        desc: 'Emergency protocols & response readiness',
+        subs: [
+            {
+                name: 'Active Threat Response',
+                items: [
+                    'homeinvasion|Home invasion immediate action plan established',
+                    'activeshooter|Active shooter/armed intruder response drills conducted',
+                    'lockdown|Lockdown procedures documented and practiced',
+                    'barricade|Barricade techniques and equipment available',
+                    'weapondefense|Defensive weapons accessible and training provided',
+                    'tacticalmove|Tactical movement to safe room rehearsed'
+                ]
+            },
+            {
+                name: 'Medical Emergency Preparedness',
+                items: [
+                    'traumakit|Trauma kits strategically placed (Stop the Bleed certified)',
+                    'aed|AED available with trained operators',
+                    'cpr|CPR/First Aid certified family members or staff',
+                    'traumacenter|Nearest Level 1 trauma center identified and mapped',
+                    'airevac|Helicopter landing zone identified for medical evacuation',
+                    'bloodtype|Family blood types documented and medical info accessible'
+                ]
+            },
+            {
+                name: 'Evacuation & Rally Points',
+                items: [
+                    'evacroutes|Primary and secondary evacuation routes mapped',
+                    'rallypoint|Off-site rally point established and communicated',
+                    'gobag|Go-bags prepared with essentials (documents, cash, meds)',
+                    'vehicles|Vehicle keys accessible and vehicles fueled',
+                    'safehouse|Safe house or alternative lodging pre-arranged',
+                    'evacdrills|Evacuation drills conducted quarterly'
+                ]
+            },
+            {
+                name: 'Natural Disaster & Environmental',
+                items: [
+                    'earthquake|Earthquake preparedness plan and supplies',
+                    'wildfire|Wildfire evacuation plan and defensible space',
+                    'flood|Flood risk mitigation and evacuation protocol',
+                    'shelter|Shelter-in-place supplies for 72+ hours',
+                    'crisisgenerator|Generator for extended power outages',
+                    'waterbackup|Water storage and purification capability'
+                ]
+            },
+            {
+                name: 'Kidnap & Extortion Response',
+                items: [
+                    'krprotocol|Kidnap & ransom response protocol established',
+                    'insurance|K&R insurance policy in place (high-risk families)',
+                    'proof life|Proof-of-life questions/protocols established',
+                    'negotiator|Crisis negotiator contact information available',
+                    'fbicontact|FBI liaison for extortion/kidnapping incidents',
+                    'duresswords|Duress words/phrases established with family'
+                ]
+            },
+            {
+                name: 'Crisis Communication',
+                items: [
+                    'commstree|Crisis communication tree established and tested',
+                    'satphone|Satellite phone or alternative communication backup',
+                    'codewords|Code words for different threat levels established',
+                    'mediaresponse|Media response plan for security incidents',
+                    'notification|Family notification protocol for incidents',
+                    'crisisupdates|Real-time update system for family/staff during crisis'
+                ]
+            },
+            {
+                name: 'Post-Incident Protocols',
+                items: [
+                    'preservation|Crime scene preservation awareness training',
+                    'documentation|Incident documentation protocols established',
+                    'victimadv|Victim advocate/support resources identified',
+                    'legal|Legal counsel for security incidents on retainer',
+                    'counseling|Trauma counseling resources identified',
+                    'lessons|Post-incident review and lessons learned process'
+                ]
+            }
+        ]
+    },
+    systems: {
+        title: '📹 Systems',
+        desc: 'Security systems & technology',
+        subs: [
+            {
+                name: 'Video Surveillance',
+                items: [
+                    'coverage|All exterior approaches covered (no blind spots)',
+                    'quality|4K cameras with night vision (IR/thermal/low-light)',
+                    'sysanalytics|AI-powered analytics enabled (person/vehicle detection)',
+                    'syslpr|License plate recognition at entry/exit points',
+                    'storage|Recording uses local AND cloud storage (redundancy)',
+                    'mobile|Mobile app access with push notifications for alerts',
+                    'tamper_cam|Cameras tamper-resistant (high mount, vandal-proof)',
+                    'encryption|Video encryption enabled (end-to-end)'
+                ]
+            },
+            {
+                name: 'Intrusion Detection / Alarm',
+                items: [
+                    'perimeter_alarm|Perimeter protection (all doors/windows sensored)',
+                    'interior_alarm|Interior motion detection (volumetric sensors)',
+                    'glassbreak_alarm|Glass-break detectors installed in key zones',
+                    'monitoring|Professional 24/7 alarm monitoring active',
+                    'integration|Direct police/emergency services integration',
+                    'backup_comm|Cellular/IP backup communication (line cut protection)',
+                    'env|Environmental sensors integrated (smoke, CO, flood, temp)',
+                    'battery|Alarm system battery backup (minimum 24 hours)',
+                    'codes|Multiple user codes with activity logging (audit trail)',
+                    'duress|Duress code feature enabled (silent alarm under coercion)',
+                    'antijam|Anti-jamming technology deployed (frequency hopping)'
+                ]
+            },
+            {
+                name: 'Access Control & Automation',
+                items: [
+                    'smartlocks|Smart locks with remote access and monitoring',
+                    'accesslogs|Access logs maintained for all entry points',
+                    'temp|Temporary access codes for staff/vendors (time-limited)',
+                    'automated|Automated gate systems with remote operation',
+                    'intercom|Video intercom at gate/entry with mobile integration',
+                    'smarthome|Smart home integration for security scenarios',
+                    'geofence|Geofencing enabled (auto-arm/disarm based on proximity)'
+                ]
+            },
+            {
+                name: 'Power Backup & Resilience',
+                items: [
+                    'generator|Backup generator installed (automatic transfer switch)',
+                    'ups|UPS for security system, cameras, alarms (4+ hour runtime)',
+                    'gen_coverage|Generator covers HVAC, lighting, gates, garage',
+                    'gen_test|Regular generator testing and maintenance (monthly)',
+                    'fuel|Fuel storage adequate (minimum 24-48 hours)'
+                ]
+            },
+            {
+                name: 'Cybersecurity & Network',
+                items: [
+                    'vlan|Home network segmented (separate VLANs for IoT/security)',
+                    'firewall|Enterprise-grade firewall installed (not consumer router)',
+                    'iot|IoT devices inventoried and secured (passwords changed)',
+                    'vpn|VPN used for remote access to security systems',
+                    'mfa|Multi-factor authentication on all security/smart home apps',
+                    'updates|Regular software/firmware updates for all devices',
+                    'wifi|Wi-Fi networks secured (WPA3 encryption, hidden SSID)',
+                    'ids|Network intrusion detection/prevention system deployed',
+                    'patches|Smart devices without security patches removed/replaced',
+                    'cyber|Cyber monitoring service for executive protection'
+                ]
+            }
+        ]
+    },
+    operational: {
+        title: '👥 Operational',
+        desc: 'Operational security & human factors',
+        subs: [
+            {
+                name: 'Pattern Management & Counter-Surveillance',
+                items: [
+                    'varied|Arrival/departure times varied to avoid predictable patterns',
+                    'routes|Multiple route options used for regular commutes',
+                    'countersurv|Family/staff trained in surveillance detection indicators',
+                    'sweeps|Counter-surveillance sweeps conducted periodically',
+                    'reporting|Suspicious activity reporting protocol established'
+                ]
+            },
+            {
+                name: 'Digital Operational Security',
+                items: [
+                    'social|Social media posting delayed (no real-time location)',
+                    'socpriv|Social media accounts private with strict follower vetting',
+                    'geotag|Geotagging disabled on all devices and photos',
+                    'photos|Photo metadata (EXIF) stripped before posting online',
+                    'email|Email addresses compartmentalized (separate for each use)',
+                    'phone|Phone numbers protected (unlisted, not published)',
+                    'ownership|Property ownership obscured (LLC, trust, holding company)',
+                    'vehiclereg|Vehicle registration privacy (avoid showing home address)',
+                    'databroker|Data broker opt-out completed (Whitepages, Spokeo, etc)',
+                    'darkweb|Dark web monitoring for leaked personal information'
+                ]
+            },
+            {
+                name: 'Family & Children Security Protocols',
+                items: [
+                    'kids|Children\'s schools/activities protected (privacy protocols)',
+                    'schoolcoord|School security coordination and emergency contacts established',
+                    'kidsocial|Children\'s social media monitored and restricted',
+                    'transport|Children transportation security (varied routes, awareness)',
+                    'playdates|Playdate/friend vetting protocols for children',
+                    'nanny|Nanny cam or childcare monitoring systems in use',
+                    'medical|Family medical emergency plan (trauma center, specialists)'
+                ]
+            },
+            {
+                name: 'Travel & Absence Security',
+                items: [
+                    'travel|Vacation/travel information controlled (minimal pre-trip disclosure)',
+                    'traveladv|Advance security work conducted for travel destinations',
+                    'occupancy|Occupancy simulation during absence (lights, vehicles)',
+                    'housesit|Trusted house-sitter or security presence during travel',
+                    'travelsoc|Zero social media posting during travel (48+ hour delay)',
+                    'returnverify|Property verified secure before family return'
+                ]
+            },
+            {
+                name: 'Staff & Insider Risk Management',
+                items: [
+                    'background|All household staff background-checked (criminal/credit/reference)',
+                    'ndas|NDAs signed by all staff with access to residence',
+                    'staffaccess|Staff access limited to necessary areas (key control)',
+                    'stafflog|Staff activity logged (sign-in/out, areas accessed)',
+                    'training|Staff security training conducted (protocols, reporting)',
+                    'vendors|Vendors pre-vetted before site access (ID verification)',
+                    'escorted|Vendors escorted on property (never unsupervised)',
+                    'briefings|Regular security briefings conducted with staff',
+                    'turnover|Staff turnover documented, access revoked immediately',
+                    'financialdistress|Staff financial distress indicators monitored',
+                    'behaviorchange|Staff behavioral changes monitored and documented',
+                    'socialmediastaff|Staff social media monitored for security violations'
+                ]
+            },
+            {
+                name: 'Package & Delivery Security',
+                items: [
+                    'packages|Packages delivered to secure location (lockbox/gate)',
+                    'screening|Package screening protocol exists (visual inspection)',
+                    'unexpected|Unexpected packages refused or isolated pending verification',
+                    'mailforward|Mail forwarding service or P.O. Box used',
+                    'porch|Video monitoring of package delivery areas',
+                    'xray|X-ray screening for suspicious packages (high-threat profiles)'
+                ]
+            },
+            {
+                name: 'Crisis Communication & Coordination',
+                items: [
+                    'commsplan|Crisis communication plan established and tested',
+                    'mediaplan|Media engagement protocol for security incidents',
+                    'familyoffice|Family office security coordination active',
+                    'corpintegration|Corporate security integration (if applicable)',
+                    'lecoord|Law enforcement liaison and emergency contacts established',
+                    'attorney|Security attorney on retainer for incidents'
+                ]
+            }
+        ]
+    }
+};
+
+// Recommendation generator with detailed industry-standard recommendations
+function getRec(id, val) {
+    // Default N/A response for all items
+    const defaultNA = {s: 'na', t: 'Not applicable to this property. This security measure is not relevant based on property characteristics or threat profile.'};
+    
+    // THREAT ASSESSMENT ITEMS - INVERTED LOGIC (YES=BAD, NO=GOOD)
+    // These questions ask about THREATS/PROBLEMS, so "yes" means threat exists (critical)
+    const threatItems = {
+        // Known Threats
+        threatcomm: {
+            yes: {s:'critical', t:'CRITICAL THREAT: Threatening communications documented. (1) Document all with law enforcement, (2) Threat assessment professional (GDBA/MOSAIC), (3) FBI report if federal crime (18 USC 875/876), (4) Communications monitoring. Cost: $3,500-7,500 threat assessment.'},
+            partial: {s:'important', t:'CONCERN: Some concerning communications. Establish documentation protocol, monitor patterns, security consultant evaluation. Cost: $1,500-3,000 initial assessment.'},
+            no: {s:'good', t:'NO THREATS: No threatening communications identified. Maintain reporting protocol, train family/staff on threat recognition, monitor for changes.'},
+            na: defaultNA
+        },
+        restraining: {
+            yes: {s:'critical', t:'ACTIVE THREAT: Restraining orders indicate credible danger. (1) Copy to local police/dispatch CAD system, (2) Enhanced perimeter security, (3) Document violations immediately, (4) Victim advocate coordination. Timeline: Immediate.'},
+            partial: {s:'important', t:'LEGAL PROCEEDINGS: Orders pending. Coordinate with attorney, prepare evidence, notify law enforcement, enhance awareness.'},
+            no: {s:'good', t:'NO ORDERS NEEDED: No active legal protective measures required. Continue monitoring for concerning behaviors.'},
+            na: defaultNA
+        },
+        stalking: {
+            yes: {s:'critical', t:'ACTIVE STALKING: Documented obsessive pursuit. (1) Law enforcement report (stalking is crime in all states), (2) Certified threat assessment, (3) Document incidents with evidence, (4) Counter-surveillance sweeps ($2,000-5,000), (5) Vary routines immediately. Stalking precedes violence in many cases. FBI BAU guidelines.'},
+            partial: {s:'important', t:'SURVEILLANCE INDICATORS: Some concerning patterns. Enhanced awareness, document incidents, threat assessment consultation, pattern variation.'},
+            no: {s:'good', t:'NO STALKING: No obsessive pursuit identified. Maintain awareness, train surveillance indicator recognition.'},
+            na: defaultNA
+        },
+        physical: {
+            yes: {s:'critical', t:'PRIOR VIOLENCE: Strongest predictor of future violence. (1) Law enforcement notification mandatory, (2) Professional threat assessment required, (3) Enhanced security immediately, (4) Consider armed security, (5) Safe haven establishment, (6) Family safety plan. Past violence = highest risk. Cost: $15,000-50,000 security upgrades.'},
+            partial: {s:'important', t:'AGGRESSION INDICATORS: Physical threats escalating. Immediate threat assessment, enhanced security, document all interactions, legal consultation.'},
+            no: {s:'good', t:'NO VIOLENCE: No assault history. Monitor escalation indicators (threats, property damage, personal space invasion).'},
+            na: defaultNA
+        },
+        propincident: {
+            yes: {s:'critical', t:'PROPERTY TARGETED: Prior intrusion/vandalism shows targeting. (1) Full security audit immediately, (2) Upgrade barriers/surveillance/alarms, (3) Law enforcement liaison, (4) Pattern analysis. Attacker has breached before. Cost: $25,000-75,000 comprehensive security.'},
+            partial: {s:'important', t:'SUSPICIOUS ACTIVITY: Some incidents noted. Document occurrences, enhance perimeter, add surveillance, notify police.'},
+            no: {s:'good', t:'NO INCIDENTS: Property not targeted. Implement preventive security, maintain protocols.'},
+            na: defaultNA
+        },
+        doxxing: {
+            yes: {s:'critical', t:'INFO WEAPONIZED: Doxxing enables physical targeting. (1) Document instances, (2) FBI report (18 USC 2261A), (3) Data removal services ($100-300/yr), (4) Enhanced security, (5) Vary routines, (6) Monitor for surveillance. Online threat precedes physical threat.'},
+            partial: {s:'important', t:'DATA EXPOSURE: Some info published. Privacy protection service, document sources, monitor escalation, enhance OpSec. Cost: $500-1,500.'},
+            no: {s:'good', t:'NO DOXXING: Info not maliciously published. Maintain digital privacy, data broker opt-outs.'},
+            na: defaultNA
+        },
+        swatting: {
+            yes: {s:'critical', t:'SWATTING CONFIRMED: False emergency calls are potentially deadly. (1) Immediate law enforcement registration, (2) Provide photo/floorplan to dispatch, (3) Codeword system with 911, (4) Request verification before SWAT, (5) FBI notification (18 USC 1038). SWAT response can be lethal. Coordinate with police chief directly.'},
+            partial: {s:'important', t:'SWATTING THREATS: Threats made. Immediate police notification, verification protocols, document threats, FBI report. Prevention critical.'},
+            no: {s:'good', t:'NO SWATTING: No false emergency calls. Maintain awareness, have direct law enforcement contacts.'},
+            na: defaultNA
+        },
+        custody: {
+            yes: {s:'critical', t:'HIGH-CONFLICT CUSTODY: Family disputes can turn violent. (1) Coordinate with family attorney on security, (2) Document violations, (3) Enhanced child protocols, (4) School security notification, (5) Supervised exchange locations, (6) Threat assessment if threats made. Family abductions occur. Alert school to custody order.'},
+            partial: {s:'important', t:'CUSTODY ACTIVE: Legal process underway. Work with attorney on safety, document behaviors, prepare enforcement, school notification.'},
+            no: {s:'good', t:'NO DISPUTES: No family court conflicts. Maintain clear custody documentation if co-parenting exists.'},
+            na: defaultNA
+        },
+        domestic: {
+            yes: {s:'critical', t:'DV HISTORY: IPV is leading cause of female homicide. (1) Victim services immediately, (2) DV advocate safety planning, (3) Enhanced security ($10,000-30,000), (4) Protective orders, (5) Threat assessment, (6) Safe haven. Separation = highest risk period. National DV Hotline: 1-800-799-7233. LAP screening essential.'},
+            partial: {s:'important', t:'IPV INDICATORS: Some concerning behaviors. DV advocacy, safety planning, legal options, threat assessment consideration.'},
+            no: {s:'good', t:'NO DV: No intimate partner violence. Maintain awareness of warning signs.'},
+            na: defaultNA
+        },
+        divorce: {
+            yes: {s:'critical', t:'HIGH-CONFLICT DIVORCE: Separation with threats. (1) Attorney with security awareness, (2) Document threats, (3) Protective orders if needed, (4) Enhanced property security, (5) Financial security, (6) Change locks/codes, (7) Threat assessment. Separation = highest risk. Coordinate safety with attorney.'},
+            partial: {s:'important', t:'DIVORCE CONFLICT: Some tension. Enhanced awareness, document interactions, legal consultation, pattern monitoring.'},
+            no: {s:'good', t:'NO HIGH-CONFLICT SEPARATION: No threatening divorce. Standard security sufficient.'},
+            na: defaultNA
+        },
+        terminated: {
+            yes: {s:'critical', t:'WORKPLACE VIOLENCE RISK: Terminated employees pose elevated threat. (1) Threat assessment (ASIS WVP standards), (2) Enhanced residential security, (3) Family briefing, (4) Corporate security coordination, (5) Monitor behaviors, (6) Law enforcement liaison. Most WPV within 1 year of termination. Cost: $3,000-6,000 assessment.'},
+            partial: {s:'important', t:'EMPLOYMENT ISSUES: Some employee concerns. Monitor behaviors, corporate security coordination, document contacts/threats.'},
+            no: {s:'good', t:'NO THREATS: No terminated employee threats. Maintain corporate security protocols.'},
+            na: defaultNA
+        },
+        litigation: {
+            yes: {s:'critical', t:'LEGAL CONFLICT: Litigation can generate violence. (1) Threat assessment, (2) Enhanced security, (3) Courthouse security coordination, (4) Document threats, (5) Law enforcement if overt threats, (6) Vary routines during trials. Legal disputes can escalate.'},
+            partial: {s:'important', t:'LITIGATION UNDERWAY: Some conflict. Monitor escalation, document behaviors, maintain awareness. Enhance during trial periods.'},
+            no: {s:'good', t:'NO THREATENING LITIGATION: No conflicts with personal animosity. Standard security.'},
+            na: defaultNA
+        },
+        business: {
+            yes: {s:'critical', t:'BUSINESS THREATS: Commercial conflicts can turn violent. (1) Threat assessment, (2) Enhanced residential/office security, (3) Document threats, (4) Law enforcement notification, (5) Corporate security integration, (6) Restraining order consideration. Cost: $20,000-60,000.'},
+            partial: {s:'important', t:'BUSINESS TENSION: Some hostility. Monitor escalation, document interactions, legal consultation, security awareness.'},
+            no: {s:'good', t:'NO THREATENING DISPUTES: No hostile commercial conflicts. Maintain business security.'},
+            na: defaultNA
+        },
+        profile: {
+            yes: {s:'important', t:'PUBLIC FIGURE: High-profile = elevated risks. (1) Comprehensive threat assessment, (2) Online monitoring (social/forums/dark web), (3) Enhanced security per ASIS, (4) Executive protection consideration, (5) Family training, (6) Crisis planning. Firms: GDBA, AS Solution, Constellis. Cost: $5,000-15,000/yr monitoring.'},
+            partial: {s:'recommended', t:'MODERATE PROFILE: Some exposure. Baseline threat monitoring, enhanced digital privacy, security assessment, family awareness.'},
+            no: {s:'good', t:'PRIVATE CITIZEN: No significant public profile. Standard residential security appropriate.'},
+            na: defaultNA
+        },
+        controversy: {
+            yes: {s:'critical', t:'POLARIZING INVOLVEMENT: Controversy generates threats. (1) Enhanced threat monitoring, (2) Social media/online tracking, (3) Law enforcement liaison, (4) Security assessment/upgrades, (5) Family briefing, (6) Crisis comms. Monitor: 4chan, 8kun, extremist forums. Cost: $3,000-8,000/yr.'},
+            partial: {s:'important', t:'SOME CONTROVERSY: Public involvement in contentious issues. Threat monitoring, enhanced awareness, online monitoring.'},
+            no: {s:'good', t:'NO CONTROVERSIAL INVOLVEMENT: Not associated with polarizing issues. Standard security posture.'},
+            na: defaultNA
+        },
+        medianega: {
+            yes: {s:'important', t:'NEGATIVE MEDIA: Media campaigns inspire threats. (1) Media monitoring service, (2) Social media threat tracking, (3) Enhanced security during peak coverage, (4) Family briefing, (5) Crisis PR. Negative media correlates with threats. Cost: $2,000-5,000/yr.'},
+            partial: {s:'recommended', t:'SOME MEDIA COVERAGE: Occasional negative attention. Monitor threatening responses, baseline security, family awareness.'},
+            no: {s:'good', t:'NO NEGATIVE MEDIA: Not subject to harmful attention. Standard protocols.'},
+            na: defaultNA
+        },
+        paparazzi: {
+            yes: {s:'important', t:'PAPARAZZI TARGETING: Photography harassment indicates high profile risk. (1) Privacy protocols, (2) Route variation/counter-surveillance, (3) Perimeter hardening (privacy screening), (4) Legal counsel on harassment laws, (5) Family training. Some paparazzi sell location info.'},
+            partial: {s:'recommended', t:'OCCASIONAL PHOTOGRAPHY: Some invasive incidents. Privacy protocols, situational awareness, legal options. Document violations.'},
+            no: {s:'good', t:'NO PAPARAZZI: Not subjected to invasive photography. Maintain privacy awareness.'},
+            na: defaultNA
+        },
+        socialmedia: {
+            yes: {s:'critical', t:'COORDINATED ATTACKS: Organized harassment escalates to physical threats. (1) Professional monitoring (Flashpoint, ZeroFox), (2) Law enforcement cybercrime notification, (3) Document harassment, (4) Enhanced security, (5) Family briefing, (6) Attorney (defamation/harassment). Online mobs have resulted in swatting/physical attacks. Cost: $5,000-12,000/yr.'},
+            partial: {s:'important', t:'SOCIAL HARASSMENT: Some online attacks. Basic monitoring, document, report to platforms/police, enhanced privacy, family awareness.'},
+            no: {s:'good', t:'NO HARASSMENT: Not targeted by online attacks. Maintain healthy privacy/monitoring.'},
+            na: defaultNA
+        },
+        followers: {
+            yes: {s:'critical', t:'FIXATED FOLLOWERS: Obsessive fan behavior = threat indicator. (1) Threat assessment by fixated persons expert (GDBA specializes), (2) Document contact attempts, (3) Law enforcement notification, (4) Enhanced security, (5) Family briefing, (6) No engagement with fixated person. Celebrity stalking has resulted in violence. Cost: $4,000-8,000.'},
+            partial: {s:'important', t:'CONCERNING FANS: Some obsessive indicators. Monitor communications, document patterns, baseline assessment, security awareness.'},
+            no: {s:'good', t:'NO FIXATED FOLLOWERS: No obsessive fan behaviors. Maintain awareness if profile increases.'},
+            na: defaultNA
+        },
+        impersonation: {
+            yes: {s:'important', t:'IDENTITY THEFT: Can be used for reconnaissance/reputation damage. (1) Document impersonation, (2) Report to platforms, (3) Law enforcement cybercrime, (4) Attorney consultation (identity theft/fraud), (5) Credit monitoring, (6) Enhanced awareness. FBI IC3 reporting. Cost: $300-800/yr identity protection.'},
+            partial: {s:'recommended', t:'MINOR IMPERSONATION: Some fake accounts. Report to platforms, document, credit monitoring, awareness.'},
+            no: {s:'good', t:'NO IMPERSONATION: Identity not misused. Monitor for issues, maintain identity theft protection.'},
+            na: defaultNA
+        },
+        escalation: {
+            yes: {s:'critical', t:'ESCALATING BEHAVIOR: Escalation predicts imminent violence. (1) IMMEDIATE threat assessment, (2) Law enforcement NOW, (3) Enhanced security immediately, (4) Family safety planning, (5) Consider protection detail, (6) Document escalation. Escalation sequence precedes attack. Time to act is NOW. Cost: $5,000-10,000 emergency assessment.'},
+            partial: {s:'important', t:'ESCALATION SIGNS: Behavior increasing. Immediate threat assessment, law enforcement contact, security enhancement, documentation. Monitor intensively.'},
+            no: {s:'good', t:'NO ESCALATION: No increasing threat behavior. Maintain monitoring for future indicators.'},
+            na: defaultNA
+        },
+        fixation: {
+            yes: {s:'critical', t:'FIXATED INDIVIDUAL: Fixation/obsession = strong violence predictor. (1) Threat assessment mandatory (GDBA, FBI BAU), (2) No direct contact, (3) Law enforcement notification, (4) Enhanced security, (5) Family/staff briefing, (6) Document attempts. Fixated individuals have limited reality testing. Cost: $5,000-10,000 specialist assessment.'},
+            partial: {s:'important', t:'FIXATION INDICATORS: Some obsessive interest. Threat assessment, document behaviors, avoid engagement, law enforcement awareness.'},
+            no: {s:'good', t:'NO FIXATION: No obsessive pursuit. Maintain awareness of warning signs.'},
+            na: defaultNA
+        },
+        pathway: {
+            yes: {s:'critical', t:'ATTACK PLANNING: Pathway behaviors = attack preparation. (1) Law enforcement IMMEDIATELY, (2) Emergency threat assessment, (3) Enhanced security NOW, (4) Family protective measures, (5) Consider relocation, (6) Document evidence. Pathway: surveillance, probing security, acquiring weapons, practicing. IMMINENT THREAT. FBI notification. Timeline: IMMEDIATE.'},
+            partial: {s:'critical', t:'POSSIBLE PLANNING: Some pathway indicators. IMMEDIATE law enforcement, threat assessment emergency, security enhancement immediately. Treat as imminent threat.'},
+            no: {s:'good', t:'NO ATTACK PLANNING: No preparation behaviors. Maintain awareness of pathway signs (surveillance, probing, reconnaissance).'},
+            na: defaultNA
+        },
+        leakage: {
+            yes: {s:'critical', t:'THREAT LEAKAGE: Communication of violent intent to third parties. (1) Law enforcement immediately, (2) Threat assessment emergency, (3) Enhanced security NOW, (4) Document leakage (statements/social media/writings), (5) Preserve evidence, (6) Family protection. Leakage is critical warning - attacker communicating intent. FBI studies show leakage precedes most targeted violence. Timeline: IMMEDIATE.'},
+            partial: {s:'important', t:'POSSIBLE LEAKAGE: Concerning statements made. Immediate documentation, law enforcement, threat assessment, security enhancement. Investigate thoroughly.'},
+            no: {s:'good', t:'NO LEAKAGE: No violent intent communication identified. Maintain awareness of concerning statements.'},
+            na: defaultNA
+        },
+        lastresort: {
+            yes: {s:'critical', t:'LAST RESORT THINKING: Grievance-driven, "nothing to lose" = extreme danger. (1) Law enforcement immediately, (2) Emergency threat assessment, (3) Enhanced security NOW, (4) Family safety immediately, (5) Consider relocation, (6) Legal protective measures. "Last resort" thinking removes constraints. Highest threat level. Cost: $10,000-50,000 emergency security.'},
+            partial: {s:'important', t:'GRIEVANCE INDICATORS: Some "last resort" statements. Immediate threat assessment, law enforcement, security enhancement, document statements. Highest concern.'},
+            no: {s:'good', t:'NO LAST RESORT THINKING: No extreme grievance mindset. Maintain awareness of this threat indicator.'},
+            na: defaultNA
+        },
+        weaponaccess: {
+            yes: {s:'critical', t:'WEAPONS + THREAT: Weapon access + threat indicators = elevated danger. (1) Law enforcement immediately, (2) Emergency threat assessment, (3) Enhanced security immediately, (4) Legal options (restraining orders can require surrender), (5) Family safety planning. Threat with means to carry out violence. Cost: $8,000-25,000 emergency protective measures.'},
+            partial: {s:'important', t:'POSSIBLE WEAPONS: Some indications of availability. Law enforcement, threat assessment, security enhancement, legal consultation.'},
+            no: {s:'good', t:'NO WEAPON ACCESS: Concerning individual not believed to have weapons. Awareness that access can change quickly.'},
+            na: defaultNA
+        },
+        dataleak: {
+            yes: {s:'important', t:'DATA EXPOSED: Leakage enables targeting. (1) Identify source/extent, (2) Data removal services (DeleteMe, PrivacyDuck, PrivacyBee), (3) Credit monitoring, (4) Enhanced OpSec, (5) Vary routines, (6) Monitor for misuse. Cost: $200-500/yr removal, $300-600/yr monitoring.'},
+            partial: {s:'recommended', t:'SOME EXPOSURE: Limited information available. Data broker opt-outs, privacy service, monitor for additional leakage.'},
+            no: {s:'good', t:'DATA PRIVACY MAINTAINED: Info not widely available. Continue data broker opt-outs, maintain digital privacy.'},
+            na: defaultNA
+        },
+        hacking: {
+            yes: {s:'critical', t:'ACCOUNTS COMPROMISED: Hacking provides access to comms/location/contacts. (1) Incident response immediately, (2) Change all passwords (unique, 16+ chars), (3) Enable MFA all accounts, (4) Device forensics, (5) Law enforcement cybercrime, (6) Enhanced digital security. FBI IC3 reporting. Cost: $3,000-8,000 incident response.'},
+            partial: {s:'important', t:'SUSPICIOUS ACTIVITY: Possible compromise attempts. Immediate password changes, MFA enablement, security review, activity monitoring.'},
+            no: {s:'good', t:'NO HACKING: Accounts secure. Maintain strong passwords, MFA on all accounts, regular security audits.'},
+            na: defaultNA
+        },
+        phishing: {
+            yes: {s:'important', t:'TARGETED PHISHING: Social engineering = reconnaissance. (1) Document attempts, (2) Cybersecurity training for family/staff, (3) Enhanced email security (ATP), (4) Law enforcement if persistent, (5) IT audit. Sophisticated phishing used for info gathering. Cost: $500-2,000/yr email security.'},
+            partial: {s:'recommended', t:'OCCASIONAL PHISHING: Some suspicious emails. Security awareness training, email filtering, documentation, staff/family education.'},
+            no: {s:'good', t:'NO TARGETED PHISHING: No social engineering attempts. Maintain awareness, email filtering, training.'},
+            na: defaultNA
+        },
+        threatdarkweb: {
+            yes: {s:'critical', t:'DARK WEB EXPOSURE: Info on dark web = serious threat. (1) Dark web monitoring (Flashpoint, DarkOwl, Echosec), (2) Law enforcement, (3) Enhanced security immediately, (4) Data removal attempts, (5) Credit fraud alerts, (6) Identity theft protection. Dark web data used for targeting, doxing, swatting. Cost: $1,000-3,000/yr monitoring.'},
+            partial: {s:'important', t:'POSSIBLE DARK WEB DATA: Some info may be present. Dark web monitoring, law enforcement awareness, enhanced security, identity protection.'},
+            no: {s:'good', t:'NO DARK WEB EXPOSURE: Info not found on dark web. Consider monitoring service for ongoing protection.'},
+            na: defaultNA
+        },
+        geolocation: {
+            yes: {s:'critical', t:'REAL-TIME TRACKING: GPS tracking/live location = immediate threat. (1) Device forensic sweep ($1,000-3,000), (2) Law enforcement immediately (stalking/unauthorized tracking illegal), (3) Replace devices if compromised, (4) Enhanced counter-surveillance, (5) Vary patterns immediately, (6) Check vehicles for trackers. Cost: TSCM sweep $2,000-5,000.'},
+            partial: {s:'important', t:'TRACKING CONCERNS: Possible monitoring. Device security audit, app permission review, TSCM sweep consideration, enhanced OpSec, pattern variation.'},
+            no: {s:'good', t:'NO TRACKING: Real-time location not believed compromised. Disable geotagging, review app permissions, maintain awareness.'},
+            na: defaultNA
+        }
+    };
+    
+    // Check if this is a threat assessment item first
+    if (threatItems[id]) {
+        if (val === 'na') return defaultNA;
+        return threatItems[id][val] || threatItems[id]['no']; // default to 'no' response if value not found
+    }
+    
+    const recs = {
+        // PERIMETER
+        boundaries: {
+            no: {s:'critical', t:'IMMEDIATE ACTION: Install perimeter fencing minimum 6ft height with anti-climb features. Recommended: 8ft wrought iron or masonry wall with security toppers. Estimated cost: $50-150/linear foot.'},
+            partial: {s:'important', t:'UPGRADE NEEDED: Complete perimeter barrier gaps. Add anti-climb features to existing fencing. Consider upgrading to 8ft height in vulnerable areas.'},
+            yes: {s:'good', t:'Perimeter boundaries adequate. Maintain vegetation clearance and inspect quarterly for damage or deterioration.'},
+            na: defaultNA
+        },
+        anticlimb: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Add anti-climb deterrents immediately. Options: Rotating wall toppers ($15-30/ft), security spikes ($10-25/ft), or anti-climb paint. Priority for areas near trees or structures.'},
+            partial: {s:'important', t:'Complete anti-climb protection on all perimeter sections, especially near access points and neighboring properties.'},
+            yes: {s:'good', t:'Anti-climb features in place. Inspect annually and after storms for damage.'}
+        },
+        anticut: {
+            no: {s:'important', t:'RECOMMENDED UPGRADE: Standard chain-link can be cut quickly. Add reinforced mesh or upgrade to welded steel panels. Cost: $20-40/linear foot for reinforcement.'},
+            partial: {s:'recommended', t:'Complete anti-cut protection on vulnerable sections, particularly rear and side boundaries away from street visibility.'},
+            yes: {s:'good', t:'Anti-cut fencing installed. Inspect quarterly for damage and maintain tension on cable-reinforced systems.'}
+        },
+        signage: {
+            no: {s:'recommended', t:'LEGAL ENHANCEMENT: Post "Private Property" and "No Trespassing" signs at property boundaries. Strengthens legal position. Cost: $10-30 per sign, 4-8 typically needed.'},
+            partial: {s:'recommended', t:'Complete signage coverage at all entry points and visible boundary sections. Verify compliance with local ordinances.'},
+            yes: {s:'good', t:'Signage adequate. Replace faded signs and verify legal compliance annually.'}
+        },
+        standoff: {
+            no: {s:'critical', t:'MAJOR VULNERABILITY: Insufficient standoff distance increases vehicle ramming and surveillance risk. Consider: Additional perimeter barriers, bollards at entry ($200-500 each), crash-rated gates if high-threat profile.'},
+            partial: {s:'important', t:'Enhance standoff protection with bollards, serpentine driveway design, or landscaping barriers to slow vehicle approach.'},
+            yes: {s:'good', t:'Standoff distance adequate. Consider additional speed control measures (speed bumps, narrowing) for enhanced security.'}
+        },
+        gates: {
+            no: {s:'critical', t:'IMMEDIATE PRIORITY: Install automated gate system with camera intercom. Minimum: Slide gate with keypad/remote ($3,000-8,000). Enhanced: Add LPR (License Plate Recognition) system ($2,000-5,000).'},
+            partial: {s:'important', t:'Upgrade gate controls: Add video intercom if missing, implement access logging, consider LPR integration for automated entry management.'},
+            yes: {s:'good', t:'Gate controls adequate. Recommendation: Enable access logging and implement visitor pre-authorization system via mobile app.'}
+        },
+        crash: {
+            no: {s:'important', t:'For high-threat profiles: Install crash-rated bollards or barriers. K4 rated (stops 15,000 lb vehicle at 30mph), K8 rated (stops 15,000 lb at 40mph), K12 rated (stops 15,000 lb at 50mph). K4: $2,000-5,000 per barrier. K8: $4,000-8,000. K12: $6,000-12,000. DOS/ASTM F2656 certified. Essential for executives with known threats.'},
+            partial: {s:'recommended', t:'Upgrade to certified crash-rated barriers. Non-rated decorative bollards provide minimal protection against vehicle attacks. Verify ASTM F2656 or DOS SD-STD-02.01 certification.'},
+            yes: {s:'good', t:'Crash protection in place. Verify certification current (K4/K8/K12 rating) and test mechanisms quarterly. Maintain clear approach zones.'}
+        },
+        pedgates: {
+            no: {s:'important', t:'SECURITY GAP: Install separate pedestrian access with keypad/card reader. Prevents leaving main gate open for foot traffic. Cost: $500-2,000 installed.'},
+            partial: {s:'recommended', t:'Enhance pedestrian gate controls: Add camera coverage, access logging, and ensure positive latching with Grade 1 lock.'},
+            yes: {s:'good', t:'Pedestrian access properly segregated. Maintain access logs and review quarterly for unauthorized patterns.'}
+        },
+        choke: {
+            no: {s:'recommended', t:'ENHANCEMENT OPPORTUNITY: Add speed control to slow approaching vehicles. Options: Speed bumps ($150-400 each), serpentine design (landscaping), narrowing points. Provides observation time and slows threat vehicles.'},
+            partial: {s:'recommended', t:'Complete speed control measures. Ideal: Multiple control points creating forced slow approach with clear observation zones.'},
+            yes: {s:'good', t:'Speed control in place. Maintain chokepoints clear of vegetation and verify effectiveness quarterly.'}
+        },
+        service: {
+            no: {s:'recommended', t:'OPERATIONAL ENHANCEMENT: Separate service entrance reduces disruption and security risks. Consider: Dedicated delivery gate/area, package lockbox, screened holding area. Cost: $1,000-5,000 depending on scope.'},
+            partial: {s:'recommended', t:'Complete service entry separation with controlled access, camera coverage, and clear procedures for deliveries/vendors.'},
+            yes: {s:'good', t:'Service entry separated. Maintain access controls, camera coverage, and staff procedures for vendor management.'}
+        },
+        emergency: {
+            no: {s:'important', t:'CRITICAL REQUIREMENT: Emergency services must be able to access property. Solutions: Knox box for gate codes ($200-400), breakaway gates, emergency override systems. Coordinate with local fire/police.'},
+            partial: {s:'recommended', t:'Verify emergency access procedures with local first responders. Test emergency override systems quarterly. Update access codes with fire department annually.'},
+            yes: {s:'good', t:'Emergency access maintained. Annual coordination with fire/police, quarterly system tests, knox box/codes updated.'}
+        },
+        lpr: {
+            no: {s:'recommended', t:'ADVANCED ENHANCEMENT: LPR provides automated access and threat detection. System cost: $2,000-5,000. Features: Automatic gate opening for authorized vehicles, visitor logging, alert on flagged plates.'},
+            partial: {s:'recommended', t:'Complete LPR deployment at all vehicle entry/exit points. Configure authorized vehicle database, enable alerts for unknown vehicles.'},
+            yes: {s:'good', t:'LPR system operational. Maintain: Database updates, camera cleaning monthly, software updates, alert tuning to reduce false positives.'}
+        },
+        detection: {
+            no: {s:'important', t:'ADVANCED SECURITY LAYER: Perimeter detection provides early warning before physical breach. Options: Fence-mounted sensors ($30-80/zone), IR beams ($200-600/pair), fiber-optic ($50-100/ft). Recommended for high-threat profiles.'},
+            partial: {s:'recommended', t:'Complete perimeter detection coverage on vulnerable sections. Integrate with alarm system and cameras for verification.'},
+            yes: {s:'good', t:'Perimeter detection active. Tune sensitivity to reduce false alarms from animals/weather. Test monthly and maintain equipment quarterly.'}
+        },
+        cameras: {
+            no: {s:'critical', t:'MAJOR VULNERABILITY: Perimeter must be monitored. Install cameras at: All corners, along fence lines (150-200ft spacing), gates, approach areas. Minimum 6-12 cameras typical residence. Budget: $3,000-10,000.'},
+            partial: {s:'important', t:'Eliminate all blind spots. Map current coverage and add cameras at gaps. Verify overlapping fields of view at critical areas.'},
+            yes: {s:'good', t:'Perimeter camera coverage adequate. Recommendation: Add AI analytics for person/vehicle detection, consider thermal cameras for complete darkness capability.'}
+        },
+        motiondet: {
+            no: {s:'recommended', t:'PSYCHOLOGICAL DETERRENT: Motion-activated responses discourage intrusion. Install: LED floods at perimeter ($50-200 each), audio warnings ($100-400), sirens ($50-200).'},
+            partial: {s:'recommended', t:'Complete motion deterrent coverage at vulnerable areas. Configure delays to allow authorized movement while triggering on suspicious behavior.'},
+            yes: {s:'good', t:'Motion deterrents deployed. Adjust sensitivity seasonally (vegetation growth), test monthly, coordinate with alarm system.'}
+        },
+        analytics: {
+            no: {s:'recommended', t:'SMART MONITORING: AI analytics dramatically reduce false alarms and provide intelligent alerts. Most modern NVRs include analytics ($500-1,500). Features: Person/vehicle classification, loitering detection, line crossing.'},
+            partial: {s:'recommended', t:'Fully configure and tune AI analytics. Set detection zones excluding normal traffic. Enable push notifications for security events.'},
+            yes: {s:'good', t:'Analytics active. Fine-tune detection zones quarterly, review alert patterns monthly, consider facial recognition where legal.'}
+        },
+        lighting: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Dark zones enable concealed approach. Install LED lighting meeting IESNA G-1 standards: Perimeter floods ($50-200 each), pathway lights ($30-100 each). Target illumination: 5 foot-candles minimum at property perimeter, 10 foot-candles at entry points. Motion-activation recommended for secondary zones. Color temperature: 4000-5000K for best identification. Total estimate: $2,000-8,000.'},
+            partial: {s:'important', t:'Eliminate all dark zones. Conduct nighttime survey with light meter to verify coverage. Add motion-activated LED floods at identified areas. Test monthly with lux meter (50-100 lux = 5-10 foot-candles). Replace failed fixtures within 24 hours.'},
+            yes: {s:'good', t:'Lighting coverage adequate per IESNA standards. Recommendation: Upgrade to smart lighting with remote monitoring, astronomical time clock, and integration with security system for automatic threat response.'}
+        },
+        motionlight: {
+            no: {s:'important', t:'UPGRADE RECOMMENDED: Motion lighting disrupts intruder night vision and alerts residents. Install at: Entry gates, garage, rear yard, dark perimeter sections. LED floods with PIR sensors: $100-300 per zone. 6-10 zones typical.'},
+            partial: {s:'recommended', t:'Expand motion lighting to all vulnerable areas. Adjust sensitivity: trigger on people, ignore small animals. Test monthly, replace sensors every 5-7 years.'},
+            yes: {s:'good', t:'Motion lighting properly deployed. Verify sensitivity settings seasonally, maintain clear detection zones (trim vegetation), battery backup for critical zones.'}
+        },
+        nodark: {
+            no: {s:'critical', t:'IMMEDIATE PRIORITY: Dark zones are security failures. Conduct night survey with light meter. Add lighting to achieve minimum 5 foot-candles throughout. Focus on: corners, gates, along fence lines, near structures.'},
+            partial: {s:'important', t:'Complete lighting to eliminate all dark zones. Use light meter to verify coverage. No area should have less than 3-5 foot-candles.'},
+            yes: {s:'good', t:'Complete perimeter visibility achieved. Maintain with quarterly night surveys, immediate fixture replacement, seasonal adjustments for vegetation.'}
+        },
+        lightpos: {
+            no: {s:'important', t:'LIGHTING EFFECTIVENESS ISSUE: Poorly positioned lights create shadows or backlight subjects. Reposition lights to: Illuminate from multiple angles, avoid backlighting (light behind subject), minimize shadows. Camera locations should inform lighting placement.'},
+            partial: {s:'recommended', t:'Optimize lighting angles. Test with camera views - can you clearly see faces and identify features? Adjust fixture angles, add fill lighting to eliminate shadows.'},
+            yes: {s:'good', t:'Lighting properly positioned. Verify camera image quality at night, adjust angles as landscaping grows, coordinate lighting with camera coverage.'}
+        },
+        backup: {
+            no: {s:'important', t:'POWER FAILURE VULNERABILITY: Security lighting must remain operational during outages. Solutions: Generator coverage ($5,000-15,000), battery backup LED fixtures ($100-300 each), solar with battery backup ($200-500 each). Minimum: Critical zones on backup power.'},
+            partial: {s:'recommended', t:'Complete backup power coverage for all security lighting. Test backup systems monthly, verify automatic transfer, maintain battery systems.'},
+            yes: {s:'good', t:'Backup lighting operational. Monthly testing required, generator maintenance quarterly, battery replacement every 3-5 years.'}
+        },
+        tamper: {
+            no: {s:'recommended', t:'ANTI-SABOTAGE MEASURE: Exposed controls can be disabled. Secure: Junction boxes locked/elevated, breakers in locked panel, redundant circuits for critical lighting, tamper switches on fixture removal. Cost: $500-2,000 for hardening.'},
+            partial: {s:'recommended', t:'Complete lighting system hardening. All controls locked, alarm on breaker panel access, redundant power to critical zones.'},
+            yes: {s:'good', t:'Lighting controls secured. Verify locks functional, test tamper alerts quarterly, maintain key control for electrical access.'}
+        },
+        trimmed: {
+            no: {s:'important', t:'IMMEDIATE ACTION: Trim all vegetation below windows to 3ft maximum. CPTED standard: Clear sightlines, eliminate concealment. Schedule professional landscaping to establish maintenance zones. Cost: $500-2,000 initial, $200-500 quarterly.'},
+            partial: {s:'recommended', t:'Complete landscaping compliance. Create formal maintenance schedule with photo documentation of proper clearance zones. Train landscaping crew on security requirements.'},
+            yes: {s:'good', t:'CPTED landscaping maintained. Continue quarterly trimming, document compliance with photos, adjust for seasonal growth rates.'}
+        },
+        trees: {
+            no: {s:'important', t:'SECURITY HAZARD: Low branches provide climbing access and block visibility. Raise all canopies to 10ft minimum near structures and windows. Arborist service: $300-1,500 depending on tree count. Annual maintenance needed.'},
+            partial: {s:'recommended', t:'Complete tree maintenance. All canopies 10ft+ near buildings, 8ft+ over pathways. Consider removing trees that overhang roofs or provide access to upper floors.'},
+            yes: {s:'good', t:'Tree canopies properly maintained. Annual professional trimming, immediate removal of storm-damaged branches, monitor for new growth reducing clearance.'}
+        },
+        noclimb: {
+            no: {s:'critical', t:'MAJOR VULNERABILITY: Vegetation near structures provides climbing access. IMMEDIATE: Remove or relocate plants near walls, especially those reaching upper floors. Maintain 4ft clearance from buildings. Alternative: Security spikes on wall tops.'},
+            partial: {s:'important', t:'Complete vegetation clearance from all structures. Remove climbing aids, maintain clearances, consider decorative trellis removal near bedroom windows.'},
+            yes: {s:'good', t:'Vegetation properly managed. Monitor seasonal growth, especially vines. Maintain 4ft clearance from buildings, quarterly inspections.'}
+        },
+        defensive: {
+            no: {s:'recommended', t:'ENHANCEMENT OPPORTUNITY: Install defensive plants below ground-floor windows. Recommended: Bougainvillea, holly, barberry, pyracantha, climbing roses. Natural deterrent, aesthetically pleasing. Professional install: $200-1,000 depending on coverage.'},
+            partial: {s:'recommended', t:'Expand defensive landscaping to all vulnerable ground-floor windows and areas where climbing is possible near fence lines.'},
+            yes: {s:'good', t:'Defensive landscaping in place. Maintain plant health and density for continued effectiveness. Replace dead plants promptly, prune to maintain coverage.'}
+        },
+        maintain: {
+            no: {s:'recommended', t:'ONGOING REQUIREMENT: Establish regular landscaping schedule. Minimum quarterly maintenance, monthly during growing season. Professional service: $200-800/month depending on property size. Include CPTED compliance in contract.'},
+            partial: {s:'recommended', t:'Formalize maintenance program. Written schedule, CPTED training for crew, photo documentation, seasonal adjustments. Verify security clearances maintained.'},
+            yes: {s:'good', t:'Maintenance program active. Annual contract review, crew training on security requirements, quarterly supervisor inspections, immediate corrective action for violations.'}
+        },
+        hardscape: {
+            no: {s:'recommended', t:'DESIGN REVIEW: Decorative elements can create concealment. Audit: Low walls, planters, sculptures, outdoor furniture. Modify or relocate items creating blind spots. Camera/lighting placement should consider hardscape.'},
+            partial: {s:'recommended', t:'Complete hardscape security review. Remove or relocate concealment-creating elements. Add lighting/cameras to monitor unavoidable blind spots.'},
+            yes: {s:'good', t:'Hardscape optimized for security. Review annually as new elements added, maintain clear sightlines, coordinate decorative changes with security assessment.'}
+        },
+        neighbor: {
+            no: {s:'important', t:'PRIVACY ENHANCEMENT: Visible interiors and activities enable surveillance. Install: Privacy fencing (8ft+, $50-150/ft), privacy screening trees (Italian Cypress, Arborvitae, $100-400 each), window films ($7-15/sq ft). Balances privacy with security visibility.'},
+            partial: {s:'recommended', t:'Complete privacy measures where needed. Balance: Block neighbor/public view of interiors while maintaining outward visibility for security. Strategic screening more effective than complete blockage.'},
+            yes: {s:'good', t:'Privacy properly managed. Maintain screening vegetation, replace damaged fence sections, clean/replace window films every 10-15 years.'}
+        },
+        aerial: {
+            no: {s:'important', t:'EMERGING THREAT: Drone surveillance is increasing. Mitigation options: RF drone detection ($2,000-10,000), privacy trees (mature specimen trees $500-5,000 each), shade structures/pergolas, smart glass. For high-threat: Anti-drone jamming where legal.'},
+            partial: {s:'recommended', t:'Complete aerial privacy measures. Combine detection (RF sensors), deterrence (trees, structures), and protocol (drone sighting response). Coordinate with local law enforcement on drone laws.'},
+            yes: {s:'good', t:'Aerial exposure mitigated. Maintain detection systems, tree canopy management, incident reporting protocol. Monitor drone technology developments.'}
+        },
+        windowtreat: {
+            no: {s:'important', t:'CRITICAL PRIVACY GAP: Interior visibility enables reconnaissance. Solutions: Blackout/privacy blinds ($100-500 per window), privacy film ($7-15/sq ft), smart glass ($100-150/sq ft). Motorized for convenience: $300-1,000 per window. Priority: Ground floor, bedrooms.'},
+            partial: {s:'recommended', t:'Complete window treatment coverage on all ground-floor and visible windows. Motorization enhances security (remote close during threat). Maintain close-at-night protocol.'},
+            yes: {s:'good', t:'Window treatments in place. Maintain operational condition, enforce family discipline on usage (closed at night), replace damaged treatments immediately.'}
+        },
+        antidrone: {
+            no: {s:'recommended', t:'FOR HIGH-THREAT PROFILES: Drone surveillance is real threat for public figures. RF detection systems: $2,000-10,000. Provides alerts when drones nearby. Jamming requires FCC approval (government/military). Create drone sighting protocol and law enforcement contact.'},
+            partial: {s:'recommended', t:'Complete anti-drone program: Detection technology, response protocol, law enforcement coordination, family training on reporting. Document incidents for pattern analysis.'},
+            yes: {s:'good', t:'Anti-drone measures active. Monitor alerts, log drone sightings, coordinate with law enforcement, update protocols as drone technology evolves.'}
+        },
+        countersurv: {
+            no: {s:'recommended', t:'PROACTIVE SECURITY: Train family/staff to recognize surveillance indicators. Signs: Repeated unfamiliar vehicles, loiterers, unusual photography, inquiries about residents. Create reporting protocol and law enforcement liaison. Training: Annual briefing, $500-2,000 for professional instruction.'},
+            partial: {s:'recommended', t:'Formalize counter-surveillance program: Written indicators list, clear reporting chain, law enforcement contact, periodic training refreshers, incident documentation.'},
+            yes: {s:'good', t:'Counter-surveillance program active. Annual training, quarterly reminders, incident review/analysis, law enforcement coordination, threat briefings for family/staff.'}
+        },
+        // BUILDING
+        solid: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Replace hollow-core doors immediately. Steel doors: $300-1,000 each installed. Solid wood: $400-1,500. Prioritize primary entry and bedroom access doors.'},
+            partial: {s:'important', t:'Replace remaining hollow-core doors. All exterior doors must be solid-core minimum. Consider steel upgrade for highest security.'},
+            yes: {s:'good', t:'Door construction adequate. Verify hinges and strikes are properly reinforced with 3" screws into studs.'}
+        },
+        deadbolts: {
+            no: {s:'critical', t:'IMMEDIATE ACTION: Install Grade 1 deadbolts on all exterior doors. Minimum: Schlage B60N or Kwikset 980 ($50-100 each). Enhanced: Smart locks with Grade 1 rating ($200-400). Must have 1" throw minimum.'},
+            partial: {s:'important', t:'Upgrade all locks to Grade 1 ANSI/BHMA certified. Replace builder-grade locks immediately. Add anti-bump, anti-drill, anti-pick features.'},
+            yes: {s:'good', t:'Grade 1 locks installed. Recommendation: Implement key control program and consider upgrade to smart locks with activity logging.'}
+        },
+        frames: {
+            no: {s:'critical', t:'CRITICAL WEAKNESS: Frames are the weakest point. Install 18-gauge steel strike plates with 3" screws into wall studs. Door armor kits: $40-150 per door. Essential for kick-resistance.'},
+            partial: {s:'important', t:'Complete frame reinforcement on all exterior doors. Ensure all strike plate screws penetrate studs, not just jamb. Replace short screws.'},
+            yes: {s:'good', t:'Frame reinforcement adequate. Inspect annually for wood rot, screw loosening, or frame separation.'}
+        },
+        hinges: {
+            no: {s:'important', t:'VULNERABILITY: Exposed hinges can be removed. Install hinge pins/studs ($5-15 per door) or replace with security hinges ($30-80 per door). Essential for outswing doors.'},
+            partial: {s:'recommended', t:'Complete hinge protection on all exterior doors. Verify set pins are properly installed and cannot be removed without door removal.'},
+            yes: {s:'good', t:'Hinge protection in place. Inspect quarterly and after any door service.'}
+        },
+        viewers: {
+            no: {s:'recommended', t:'SAFETY ENHANCEMENT: Install wide-angle peepholes on all exterior doors. Cost: $10-30 each. Digital peephole cameras: $50-200 each with recording capability.'},
+            partial: {s:'recommended', t:'Complete peephole installation on all exterior doors. Verify height accessible for all family members. Consider digital upgrade.'},
+            yes: {s:'good', t:'Peepholes installed. Clean lenses quarterly. Consider upgrade to digital peephole cameras with recording.'}
+        },
+        glass: {
+            no: {s:'important', t:'VULNERABILITY: Glass near locks can be broken to reach inside. Solutions: Security film ($7-15/sq ft), replace with reinforced glass, cover with decorative grill, relocate locks out of reach. Cost: $100-500 per door.'},
+            partial: {s:'recommended', t:'Complete glass protection on all doors. Verify film properly installed and anchored. Alternative: Deadbolts positioned out of reach from glass.'},
+            yes: {s:'good', t:'Glass panels protected. Film should be replaced every 10-15 years. Inspect for peeling or damage.'}
+        },
+        french: {
+            no: {s:'important', t:'CRITICAL WEAKNESS: French doors easily forced if not properly secured. Install: Flush bolts top and bottom on inactive door ($30-80 per set), reinforce astragal (center meeting point), Grade 1 deadbolt on active door. Total: $150-400.'},
+            partial: {s:'recommended', t:'Complete French door hardening. Flush bolts must be properly installed and used. Consider upgrading to multi-point locking system ($200-600).'},
+            yes: {s:'good', t:'French doors properly secured. Verify flush bolts used regularly. Inspect astragal for damage and proper fit.'}
+        },
+        smart: {
+            no: {s:'recommended', t:'MODERN ENHANCEMENT: Smart locks provide access logging and remote control. Benefits: Activity tracking, temporary codes for staff/vendors, remote locking, integration with security system. Cost: $200-400 per lock.'},
+            partial: {s:'recommended', t:'Complete smart lock deployment on all exterior doors. Ensure: Grade 1 rating, mechanical backup, activity logging enabled, mobile access configured.'},
+            yes: {s:'good', t:'Smart lock audit trail active. Review logs weekly, use temporary codes for staff/vendors, revoke codes when no longer needed. Update firmware regularly.'}
+        },
+        windowfilm: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Windows are primary entry point. Install 8-12mil security film ($7-15/sq ft installed) or laminated glass ($40-100/sq ft). For high-threat: Consider bars or grilles ($200-800 per window).'},
+            partial: {s:'important', t:'Complete window reinforcement on all ground-floor and accessible windows. Verify film is anchored to frame with wet-glaze system.'},
+            yes: {s:'good', t:'Window reinforcement in place. Security film should be replaced every 10-15 years or after impact damage.'}
+        },
+        winsensors: {
+            no: {s:'critical', t:'MAJOR GAP: Install sensors on all ground-floor and accessible windows. Wired sensors: $30-60 each. Wireless: $40-80 each. Essential for alarm system effectiveness.'},
+            partial: {s:'important', t:'Complete sensor coverage on all accessible windows including basement, garage, and upper-floor near trees/structures.'},
+            yes: {s:'good', t:'Window sensors deployed. Test monthly and replace batteries annually on wireless sensors.'}
+        },
+        sliding: {
+            no: {s:'critical', t:'CRITICAL WEAKNESS: Sliding doors easily lifted/forced. Install: Blocking bar ($20-50), foot lock ($15-40), and anti-lift plates ($10-30). All three recommended for maximum security.'},
+            partial: {s:'important', t:'Install missing security devices. All sliding doors require: blocking bar, additional lock, and anti-lift plates. Verify track cannot be lifted.'},
+            yes: {s:'good', t:'Sliding door security adequate. Verify all devices functional and blocking bar is used when occupied.'}
+        },
+        winsecondary: {
+            no: {s:'important', t:'SECURITY GAP: Window sash locks alone are inadequate. Add secondary locks: Pin locks ($5-15 per window), sash locks ($10-30), or window bars. Essential on all accessible windows.'},
+            partial: {s:'recommended', t:'Complete secondary lock installation on all ground-floor and accessible windows. Include basement windows and windows near climbing aids.'},
+            yes: {s:'good', t:'Secondary locks installed. Verify locks functional and family members use them. Key management for keyed locks.'}
+        },
+        glassbreak: {
+            no: {s:'important', t:'RECOMMENDED UPGRADE: Install glass-break sensors in rooms with large windows or glass doors. Audio sensors: $30-80 each, cover 20-25ft radius. Add to living areas, bedrooms with patio access.'},
+            partial: {s:'recommended', t:'Expand glass-break coverage to all rooms with significant glazing. One sensor typically covers multiple windows if positioned centrally.'},
+            yes: {s:'good', t:'Glass-break detection in place. Test monthly with glass-break simulator to verify sensor sensitivity.'}
+        },
+        casement: {
+            no: {s:'recommended', t:'UPGRADE OPPORTUNITY: Standard casement locks are weak. Upgrade to multi-point locking systems or add secondary locks. Cost: $30-100 per window depending on type.'},
+            partial: {s:'recommended', t:'Complete casement window locking upgrades. Verify cranks functional and locks engage properly. Consider removing cranks as additional security.'},
+            yes: {s:'good', t:'Casement windows properly secured. Inspect crank mechanisms annually. Verify locks engage fully.'}
+        },
+        basement: {
+            no: {s:'important', t:'VULNERABILITY: Basement windows are hidden entry points. Solutions: Window bars ($100-400 per window), polycarbonate well covers ($80-200), or security grilles. Must allow emergency egress if bedrooms present.'},
+            partial: {s:'recommended', t:'Complete basement window protection. Verify bars/covers allow emergency egress where required by code. Add sensors to all basement windows.'},
+            yes: {s:'good', t:'Basement windows protected. Verify covers secure and maintained. Check window well drainage to prevent flooding.'}
+        },
+        filminstall: {
+            no: {s:'important', t:'INSTALLATION CRITICAL: DIY film installation is ineffective. Professional installation with wet-glaze anchoring system essential for security. Film must be attached to frame, not just glass. Certified installer: $300-1,000 minimum depending on footage.'},
+            partial: {s:'recommended', t:'Verify existing film properly installed with frame anchoring. If not, reinstall correctly. Without anchoring, film provides minimal security.'},
+            yes: {s:'good', t:'Film professionally installed with frame anchoring. Verify warranty current. Inspect for edge peeling or damage annually.'}
+        },
+        garagecode: {
+            no: {s:'important', t:'SECURITY RISK: Old openers vulnerable to code grabbing. Replace with rolling-code opener: $200-500 installed. Chamberlain, LiftMaster, or Genie with Security+ 2.0. Immediate replacement recommended.'},
+            partial: {s:'recommended', t:'Upgrade all garage openers to current rolling-code technology. Older units should be replaced regardless of function.'},
+            yes: {s:'good', t:'Modern opener with rolling codes. Recommendation: Add MyQ or similar for remote monitoring and alerts.'}
+        },
+        garagemanual: {
+            no: {s:'recommended', t:'BACKUP SECURITY: Add manual lock as backup when traveling or during extended absence. Slide bolt or padlock hasp: $15-40. Provides security if opener fails or is compromised.'},
+            partial: {s:'recommended', t:'Install manual locks on all garage doors. Train family on use during vacation/absence. Verify locks functional.'},
+            yes: {s:'good', t:'Manual garage locks installed. Use during extended absence. Inspect locks quarterly for functionality.'}
+        },
+        garagehouse: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Garage is easily breached, making this door your real perimeter. MUST upgrade to: Solid-core or steel door, Grade 1 deadbolt, fire-rated (20-minute minimum). Cost: $300-800.'},
+            partial: {s:'important', t:'Complete garage-to-house door upgrades. This is as critical as your front door. Must include deadbolt and solid/steel construction.'},
+            yes: {s:'good', t:'Garage-to-house door properly secured. Ensure door stays locked and family maintains discipline using this entry.'}
+        },
+        garagewindows: {
+            no: {s:'recommended', t:'PRIVACY ISSUE: Visible garage contents reveal occupancy patterns and valuables. Cover windows with privacy film ($5-15/sq ft) or install curtains. Prevents surveillance of vehicles and routines.'},
+            partial: {s:'recommended', t:'Complete garage privacy measures. All windows covered, no visibility of interior from street/neighbors. Maintain covering integrity.'},
+            yes: {s:'good', t:'Garage privacy maintained. Keep curtains/blinds closed. Replace damaged privacy film.'}
+        },
+        outbuildings: {
+            no: {s:'important', t:'VULNERABILITY: Unsecured outbuildings provide concealment and staging areas. Add: Locks, motion lights, cameras, and alarm sensors. Budget: $500-2,000 per structure depending on size.'},
+            partial: {s:'recommended', t:'Complete outbuilding security integration. All structures should have: secure locks, lighting, and camera coverage minimum.'},
+            yes: {s:'good', t:'Outbuildings secured. Maintain regular inspections and include in alarm system monitoring.'}
+        },
+        mechanical: {
+            no: {s:'recommended', t:'CRITICAL INFRASTRUCTURE: Mechanical rooms should be locked. Sabotage to HVAC, electrical, or water can disable home systems. Install locks, consider door sensors. Cost: $50-200 per room.'},
+            partial: {s:'recommended', t:'Complete mechanical room security. All rooms locked, keys controlled, access logged if high-security environment. Sensor integration recommended.'},
+            yes: {s:'good', t:'Mechanical rooms secured. Maintain key control, verify locks functional. Consider adding sensors for high-threat profiles.'}
+        },
+        roof: {
+            no: {s:'recommended', t:'ACCESS VULNERABILITY: Roof hatches should be locked from interior. Skylights reinforced with security film or laminated glass. Prevents unauthorized roof access and skylight breach. Cost: $100-500 depending on openings.'},
+            partial: {s:'recommended', t:'Complete roof access security. All hatches locked, skylights reinforced, ladder access to roof controlled/removed.'},
+            yes: {s:'good', t:'Roof access secured. Verify locks functional, inspect skylight reinforcement annually.'}
+        },
+        noclimb_features: {
+            no: {s:'important', t:'CLIMBING HAZARD: Remove or secure climbable features near upper floors. Trellises, architectural details, downspouts near windows provide access. Secure or remove items within 10ft of upper windows. Cost: $200-1,000.'},
+            partial: {s:'recommended', t:'Complete climbing hazard removal. Verify no features provide access to upper floors or roof. Include HVAC units, decorative elements.'},
+            yes: {s:'good', t:'Climbable features removed/secured. Monitor for new climbing aids (growing vegetation, stored items). Quarterly inspections.'}
+        },
+        balconies: {
+            no: {s:'important', t:'BALCONY VULNERABILITY: Balcony doors should have same security as ground-floor. Add: Grade 1 deadbolts, sliding door locks, door sensors. Verify balcony cannot be accessed from ground (minimum 12ft height). Cost: $100-400 per balcony.'},
+            partial: {s:'recommended', t:'Complete balcony security. Doors locked, sensors installed, climbing paths eliminated. Verify railing height adequate (42" minimum).'},
+            yes: {s:'good', t:'Balcony security adequate. Maintain door locks functional, sensors tested monthly. Inspect for degradation of barriers.'}
+        },
+        fire_escape: {
+            no: {s:'recommended', t:'FIRE ESCAPE SECURITY: Required fire escapes should have security measures. Install: Counterweighted gates (allow exit but prevent entry), door sensors on fire escape access points. Coordinate with fire marshal. Cost: $300-1,000.'},
+            partial: {s:'recommended', t:'Complete fire escape security while maintaining emergency egress capability. Gates properly installed, sensors active, tested quarterly.'},
+            yes: {s:'good', t:'Fire escape security in place. Test gates quarterly to ensure emergency function while preventing unauthorized access. Coordinate with fire department.'}
+        },
+        roof_edge: {
+            no: {s:'recommended', t:'PERIMETER DEFENSE: Roof edges should not provide handholds for scaling. Install: Smooth fascia, anti-climb paint on accessible edges, remove/secure drain pipes. Cost: $500-2,000 depending on roof perimeter.'},
+            partial: {s:'recommended', t:'Complete roof edge hardening. All accessible edges treated, downspouts secured, no handholds within reach from ground/adjacent structures.'},
+            yes: {s:'good', t:'Roof edge protection in place. Inspect annually for degradation. Verify anti-climb coatings functional.'}
+        },
+        // INTERIOR
+        saferoom: {
+            no: {s:'critical', t:'HIGHLY RECOMMENDED FOR HIGH-THREAT PROFILES: Designate/build safe room in primary bedroom or nearby. Minimum: Reinforced door ($500-2,000). Complete build: $5,000-50,000 depending on level (forced-entry vs. ballistic). Essential for defend-in-place strategy.'},
+            partial: {s:'important', t:'Upgrade designated safe space to true safe room specifications: Reinforced door, communication system, panic button, emergency supplies.'},
+            yes: {s:'good', t:'Safe room established. Verify: Communication system functional, supplies current, family trained on use, tested quarterly.'}
+        },
+        safedoor: {
+            no: {s:'critical', t:'IMMEDIATE UPGRADE: Safe room requires secure door. Forced-entry protection: Steel-reinforced door with Grade 1 deadbolt ($500-1,500). Ballistic protection: UL 752 Level 1 (9mm, .357 Mag, $3,000-5,000), Level 2 (.357 Mag higher velocity, $4,000-6,000), Level 3 (.44 Mag, rifle 7.62mm, $5,000-8,000). Must open inward for better protection. Multi-point locking system required. Frame anchoring critical.'},
+            partial: {s:'important', t:'Upgrade to proper safe room door. Standard residential door inadequate. Minimum requirements: Steel construction, multi-point locking system, Grade 1 deadbolt, reinforced frame with 3" screws into studs. For high-threat: UL 752 ballistic rating.'},
+            yes: {s:'good', t:'Safe room door properly rated. Test lock mechanism monthly, verify door cannot be forced open from outside. Inspect frame anchoring quarterly. Maintain interior panic hardware functional.'}
+        },
+        safecomm: {
+            no: {s:'critical', t:'CRITICAL REQUIREMENT: Safe room must have communication. Install: Dedicated landline ($30-50/month) or cellular device ($20-40/month). Backup: Charged cell phone in room. Must be able to call 911 if main systems cut.'},
+            partial: {s:'important', t:'Ensure communication system is truly independent. Test monthly. Consider redundancy: landline + cell backup + VoIP via separate internet connection.'},
+            yes: {s:'good', t:'Independent communication in place. Test all systems monthly and maintain charged backup devices.'}
+        },
+        panic: {
+            no: {s:'critical', t:'IMMEDIATE INSTALLATION: Panic button essential for safe room. Wired panic button: $100-300. Wireless: $150-400. Must trigger silent alarm to monitoring station and police. Also install in primary bedroom.'},
+            partial: {s:'important', t:'Verify panic button triggers proper response. Test monthly with monitoring company. Consider adding wireless panic pendants for family members ($50-150 each).'},
+            yes: {s:'good', t:'Panic system operational. Monthly testing required. Verify monitoring station protocol includes immediate police dispatch.'}
+        },
+        supplies: {
+            no: {s:'important', t:'REQUIRED FOR SAFE ROOM: Stock: Water (1 gal/person), non-perishable food, first aid kit, medications, flashlight, phone charger, radio. Rotate supplies every 6 months. Budget: $200-500 initial.'},
+            partial: {s:'recommended', t:'Complete emergency supply kit. Add: 72-hour supply per person, backup lighting, trauma kit if trained, comfort items for children. Check/rotate quarterly.'},
+            yes: {s:'good', t:'Emergency supplies stocked. Implement quarterly inspection schedule with rotation log. Replace expired items promptly.'}
+        },
+        bedroom: {
+            no: {s:'important', t:'CRITICAL FOR DEFENSE-IN-DEPTH: Upgrade primary bedroom door to solid-core with deadbolt. Provides crucial delay time. Cost: $200-600. Essential even if safe room exists.'},
+            partial: {s:'recommended', t:'Complete bedroom door reinforcement. Add: Solid-core door, Grade 1 deadbolt, strike plate reinforcement. Family must use lock nightly.'},
+            yes: {s:'good', t:'Bedroom door adequate. Verify family maintains discipline locking door at night. Test lock monthly.'}
+        },
+        children: {
+            no: {s:'important', t:'FAMILY SAFETY PRIORITY: Upgrade children\'s doors to solid-core with locks accessible from inside. Proximity to parents critical - consider room relocation if currently distant. Cost: $150-400 per door.'},
+            partial: {s:'recommended', t:'Complete children\'s room hardening. Doors must lock from inside, be solid-core, and have clear path to parents\' room or safe room.'},
+            yes: {s:'good', t:'Children\'s rooms properly configured. Train children on emergency protocols quarterly. Practice safe room drills.'}
+        },
+        chokepoints: {
+            no: {s:'recommended', t:'TACTICAL AWARENESS: Identify and leverage natural chokepoints (stairs, hallways) for defensive positioning. Consider: Additional motion sensors, cameras at chokepoints, tactical advantage points. Training: $500-2,000 for professional consultation.'},
+            partial: {s:'recommended', t:'Formalize chokepoint security strategy. Map defensive positions, install sensors/cameras at critical points, train family on safe room access routes.'},
+            yes: {s:'good', t:'Chokepoints identified and secured. Family trained on emergency routes. Quarterly review of procedures.'}
+        },
+        intmotion: {
+            no: {s:'important', t:'DETECTION GAP: Add interior motion sensors at choke points: stairs, hallway to bedrooms, living areas. Pet-immune sensors available. Cost: $50-150 per sensor. 3-5 typically needed.'},
+            partial: {s:'recommended', t:'Expand interior motion coverage to all pathways to sleeping areas. Configure alarm system for \'stay\' mode when home.'},
+            yes: {s:'good', t:'Interior motion detection deployed. Use \'stay\' mode nightly. Test sensors monthly and adjust sensitivity for pets if needed.'}
+        },
+        panicmultiple: {
+            no: {s:'important', t:'RECOMMENDED ENHANCEMENT: Install panic buttons in: Primary bedroom, children\'s rooms, kitchen, primary bathroom. Options: Wired ($100-300 each), wireless ($150-400 each), wearable pendants ($50-150). 4-6 locations recommended.'},
+            partial: {s:'recommended', t:'Expand panic button coverage to all high-occupancy areas. Ensure all family members know locations and how to activate.'},
+            yes: {s:'good', t:'Panic buttons deployed. Test monthly with monitoring company. Consider adding wearable panic devices for high-threat situations.'}
+        },
+        medical: {
+            no: {s:'recommended', t:'PREPAREDNESS ENHANCEMENT: Stock trauma/first aid kit ($100-300), consider AED if family history warrants ($1,200-2,000). Essential medications stored in safe room. Training: Stop the Bleed course.'},
+            partial: {s:'recommended', t:'Complete medical preparedness: Full trauma kit, AED if appropriate, medication supply, family training. Check supplies quarterly.'},
+            yes: {s:'good', t:'Medical supplies in place. Verify: Supplies current, family trained in use, AED tested per schedule, medications not expired.'}
+        },
+        fire: {
+            no: {s:'important', t:'FIRE SAFETY REQUIREMENT: Install monitored smoke/heat detectors in all rooms. Fire extinguishers: Kitchen (Class K), living areas (ABC). Integrated with alarm system for monitoring response. Cost: $500-2,000.'},
+            partial: {s:'recommended', t:'Complete fire detection and suppression. All detectors monitored, extinguishers current (monthly check), escape plan documented and practiced.'},
+            yes: {s:'good', t:'Fire systems in place. Monthly detector tests, annual extinguisher inspection, battery replacement annually, monitoring verified.'}
+        },
+        evacplan: {
+            no: {s:'important', t:'CRITICAL PLANNING GAP: Create written evacuation plan with: Primary/secondary exit routes, rally point, communication protocol. Practice quarterly with family. Document: escape routes, safe room location, emergency contacts.'},
+            partial: {s:'recommended', t:'Complete and practice evacuation plan. Include: Fire escape, intruder response, natural disaster procedures. Quarterly drills with children. Document and review annually.'},
+            yes: {s:'good', t:'Evacuation plan exists and practiced. Maintain quarterly drills, update plan annually, ensure all family members including children know procedures.'}
+        },
+        contacts: {
+            no: {s:'recommended', t:'PREPAREDNESS ENHANCEMENT: Create laminated emergency contact card with: 911, monitoring company, neighbors, family, poison control, utilities. Post in: safe room, kitchen, garage. Cost: $10-30.'},
+            partial: {s:'recommended', t:'Complete emergency contact posting. Update contacts annually, verify numbers current, train children on 911 use.'},
+            yes: {s:'good', t:'Emergency contacts posted and current. Annual review and update. Children trained on 911 use.'}
+        },
+        // SYSTEMS
+        coverage: {
+            no: {s:'critical', t:'MAJOR VULNERABILITY: Install comprehensive camera system. Minimum: 4-8 cameras for typical residence. 4K cameras ($150-400 each), NVR ($300-800), installation ($1,000-3,000). Coverage needed: All entries, driveway, perimeter, garage.'},
+            partial: {s:'important', t:'Eliminate blind spots. Add cameras at identified gaps. Verify overlapping coverage at all entry points. No approach should be unmonitored.'},
+            yes: {s:'good', t:'Camera coverage adequate. Recommendation: Add AI analytics (person/vehicle detection), LPR at gate, thermal cameras for complete darkness capability.'}
+        },
+        quality: {
+            no: {s:'important', t:'UPGRADE NEEDED: Replace analog or low-res cameras with 4K (8MP) IP cameras for facial identification at 20ft+. Minimum specs: 4K resolution (3840×2160), 30fps, WDR 120dB+, IR night vision 100ft+, H.265 compression, IP67 weatherproof. Budget: $200-500 per camera. For critical areas: 4K with thermal overlay ($800-2,000) provides zero-light capability. DORI standard: Detection 200ft, Observation 80ft, Recognition 40ft, Identification 20ft at 4K.'},
+            partial: {s:'recommended', t:'Upgrade remaining low-resolution cameras to 4K. Verify all cameras meet DORI standards for intended coverage area. Prioritize facial identification capability at entry points. IR night vision 100ft+ required - thermal recommended for perimeter.'},
+            yes: {s:'good', t:'High-quality 4K cameras deployed. Maintain: Clean lenses quarterly (spider webs, dirt reduce effectiveness), verify night vision function monthly, update firmware when released, check focus annually, replace cameras after 5-7 years or technological advancement.'}
+        },
+        sysanalytics: {
+            no: {s:'recommended', t:'SMART MONITORING: AI analytics dramatically reduce false alarms and provide intelligent alerts. Most modern NVRs include analytics ($500-1,500). Features: Person/vehicle classification, loitering detection, line crossing, zone intrusion.'},
+            partial: {s:'recommended', t:'Fully configure and tune AI analytics. Set detection zones excluding normal traffic (street, neighbors). Enable push notifications for security events, disable for authorized movement patterns.'},
+            yes: {s:'good', t:'Analytics active. Fine-tune detection zones quarterly, review alert patterns monthly, consider advanced features like facial recognition where legal.'}
+        },
+        syslpr: {
+            no: {s:'recommended', t:'ADVANCED ENHANCEMENT: LPR provides automated access and threat detection. System cost: $2,000-5,000. Features: Automatic gate opening for authorized vehicles, visitor logging, alert on flagged plates.'},
+            partial: {s:'recommended', t:'Complete LPR deployment at all vehicle entry/exit points. Configure authorized vehicle database, enable alerts for unknown vehicles.'},
+            yes: {s:'good', t:'LPR system operational. Maintain: Database updates, camera cleaning monthly, software updates, alert tuning.'}
+        },
+        storage: {
+            no: {s:'important', t:'CRITICAL REDUNDANCY: Add cloud backup to local NVR. Local can be stolen/destroyed. Cloud storage: $10-30/month per camera. Minimum 30-day retention. Essential for evidence preservation.'},
+            partial: {s:'recommended', t:'Implement full redundancy: Local NVR + cloud backup. Verify both systems recording. Test retrieval monthly. 30-day minimum retention, 60-90 days recommended.'},
+            yes: {s:'good', t:'Redundant storage in place. Verify: Both systems recording, retention period adequate (30+ days), storage not full, retrieval tested monthly.'}
+        },
+        mobile: {
+            no: {s:'important', t:'CRITICAL CAPABILITY: Enable mobile access for real-time monitoring. Most modern systems include apps. Configure push notifications for: motion, person detection, line crossing. Essential for awareness when away.'},
+            partial: {s:'recommended', t:'Optimize mobile access: Configure all family members, set up smart notifications, enable two-factor authentication, verify remote access works reliably.'},
+            yes: {s:'good', t:'Mobile access configured. Recommendation: Regular family review of notifications, adjust sensitivity to reduce false alarms while maintaining security.'}
+        },
+        tamper_cam: {
+            no: {s:'recommended', t:'ANTI-SABOTAGE: Cameras should be mounted high (10ft+), use vandal-proof housings, and have protected cabling. Wireless cameras as backup. Cost: $50-150 per camera for housings/protection.'},
+            partial: {s:'recommended', t:'Complete camera hardening. All cameras in vandal-proof housings, high mounted where possible, cables protected in conduit.'},
+            yes: {s:'good', t:'Cameras properly protected. Inspect quarterly for tampering attempts. Verify housings secure and cables protected.'}
+        },
+        encryption: {
+            no: {s:'recommended', t:'PRIVACY ENHANCEMENT: Enable encryption on camera system to prevent interception. Most modern systems support encryption. Verify: End-to-end encryption for streaming, encrypted storage, secure authentication.'},
+            partial: {s:'recommended', t:'Verify all encryption features enabled. Use strong unique passwords, enable two-factor authentication, regular firmware updates.'},
+            yes: {s:'good', t:'Video encryption active. Maintain: Strong passwords, firmware updates, two-factor authentication, regular security audits.'}
+        },
+        perimeter_alarm: {
+            no: {s:'critical', t:'CRITICAL SYSTEM GAP: Install complete alarm system with sensors on all doors and accessible windows. Professional system: $500-2,000 equipment + $30-60/month monitoring. Self-monitored: $300-800 equipment. Mandatory for adequate security.'},
+            partial: {s:'important', t:'Complete perimeter sensor coverage. EVERY door and accessible window must be sensored. Verify system reports sensor status (open/closed).'},
+            yes: {s:'good', t:'Perimeter protection complete. Test all sensors monthly. Replace wireless sensor batteries annually. Verify monitoring station receives all signals.'}
+        },
+        interior_alarm: {
+            no: {s:'important', t:'DETECTION GAP: Add interior motion sensors for secondary detection layer. Install in: hallways to bedrooms, living areas, basement. 3-6 sensors typically needed ($50-150 each). Use \'stay\' mode when home.'},
+            partial: {s:'recommended', t:'Complete interior motion coverage at choke points. Configure \'stay\' mode to allow interior movement while protecting perimeter. Pet-immune sensors if needed.'},
+            yes: {s:'good', t:'Interior motion detection in place. Use \'stay\' mode nightly. Test sensors monthly. Adjust coverage if pets trigger false alarms.'}
+        },
+        glassbreak_alarm: {
+            no: {s:'important', t:'RECOMMENDED UPGRADE: Install glass-break sensors in rooms with large windows or glass doors. Audio sensors: $30-80 each, cover 20-25ft radius. Add to living areas, bedrooms with patio access.'},
+            partial: {s:'recommended', t:'Expand glass-break coverage to all rooms with significant glazing. One sensor typically covers multiple windows if positioned centrally.'},
+            yes: {s:'good', t:'Glass-break detection in place. Test monthly with glass-break simulator to verify sensor sensitivity.'}
+        },
+        monitoring: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Self-monitored systems require your response and provide no emergency dispatch. Professional UL-certified central station monitoring essential: $30-60/month. Services provided: Police dispatch (verified alarm protocol), fire department notification, medical emergency response, environmental alerts. Response standards: Signal received within 90 seconds, police dispatch within 2 minutes. For high-threat: Priority response agreements available with local PD. UL 827 certified central station required.'},
+            partial: {s:'important', t:'Ensure monitoring includes: UL-certified central station, police dispatch authorization on file, cellular backup communication, redundant signal paths. Verify response protocol quarterly: Call monitoring company, trigger test alarm, confirm police dispatch time under 2 minutes. Update emergency contact list.'},
+            yes: {s:'good', t:'Professional UL-certified monitoring active. Maintain: Current police authorization (renewed annually), contact list updated within 24 hours of changes, monthly test calls logged, response time verified quarterly (90-second signal, 2-minute dispatch), false alarm reduction plan active.'}
+        },
+        integration: {
+            no: {s:'recommended', t:'ENHANCED RESPONSE: Establish direct integration with local police through verified alarm program. Reduces false alarm fines, improves response priority. Coordinate with monitoring company and police department.'},
+            partial: {s:'recommended', t:'Complete police integration. Verify: Alarm permit current, police database updated, verified response protocol active, testing schedule maintained.'},
+            yes: {s:'good', t:'Police integration active. Maintain: Annual permit renewal, updated contact info with police, quarterly coordination meetings, verified alarm protocol compliance.'}
+        },
+        backup_comm: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Phone/internet lines can be cut. Add cellular backup: $10-20/month. Essential for alarm signal transmission if primary communication fails. Mandatory for professional systems.'},
+            partial: {s:'important', t:'Verify cellular backup functional and active. Test monthly by disconnecting primary communication. Alarm must still report to monitoring station.'},
+            yes: {s:'good', t:'Backup communication in place. Test monthly by disconnecting primary path. Verify monitoring station receives signal via backup within 30-60 seconds.'}
+        },
+        env: {
+            no: {s:'recommended', t:'COMPREHENSIVE MONITORING: Integrate environmental sensors with alarm system. Smoke/CO: $50-100 each (monitored). Flood sensors: $40-80 each. Temperature: $30-60. Provides 24/7 monitoring of multiple threats.'},
+            partial: {s:'recommended', t:'Complete environmental sensor integration. All sensors monitored, tested monthly, batteries replaced annually.'},
+            yes: {s:'good', t:'Environmental sensors integrated and monitored. Monthly tests, annual battery replacement, monitoring verified.'}
+        },
+        battery: {
+            no: {s:'important', t:'POWER FAILURE VULNERABILITY: Alarm system must function during power outages. Install UPS or battery backup providing minimum 24-hour runtime. UPS for alarm panel: $100-300. Verify backup capacity adequate.'},
+            partial: {s:'recommended', t:'Verify battery backup provides adequate runtime (24+ hours). Test monthly by unplugging panel. Replace batteries every 3-5 years.'},
+            yes: {s:'good', t:'Battery backup in place. Monthly self-test, annual battery replacement if needed, runtime verified (24+ hours minimum).'}
+        },
+        codes: {
+            no: {s:'recommended', t:'ACCESS MANAGEMENT: Modern systems support multiple user codes with logging. Assign unique codes to: Family members, staff, vendors. Monitor usage patterns. Essential for accountability.'},
+            partial: {s:'recommended', t:'Implement comprehensive code management: Unique codes for all users, activity logging enabled, weekly log review, code rotation after staff changes.'},
+            yes: {s:'good', t:'User code system active. Maintain: Unique codes for all users, weekly log review, immediate code deletion upon termination, rotation after suspicious activity.'}
+        },
+        duress: {
+            no: {s:'recommended', t:'SECURITY ENHANCEMENT: Configure duress code (usually regular code +1). Disarms panel but triggers silent police dispatch. Essential for home invasion scenarios. Configure and test with monitoring company.'},
+            partial: {s:'recommended', t:'Ensure all family members know duress code. Test with monitoring company to verify silent alarm triggers properly. Update code annually.'},
+            yes: {s:'good', t:'Duress code active. Verify all family members trained. Test annually with monitoring company. Must trigger silent alarm, not audible notification.'}
+        },
+        antijam: {
+            no: {s:'recommended', t:'ADVANCED PROTECTION: Wireless alarm systems can be jammed. Modern systems use frequency hopping and encryption to prevent jamming. Upgrade if system doesn\'t have anti-jamming features. Cost: $500-2,000 for system upgrade.'},
+            partial: {s:'recommended', t:'Verify anti-jamming features enabled and functional. Consider wired sensors for critical zones as backup to wireless.'},
+            yes: {s:'good', t:'Anti-jamming features active. Test periodically. Maintain hybrid approach with wired sensors at critical points as backup.'}
+        },
+        smartlocks: {
+            no: {s:'recommended', t:'MODERN ENHANCEMENT: Smart locks provide access logging and remote control. Benefits: Activity tracking, temporary codes, remote locking, security system integration. Grade 1 smart locks: $200-400 each.'},
+            partial: {s:'recommended', t:'Complete smart lock deployment on all exterior doors. Ensure: Grade 1 rating, mechanical backup, activity logging enabled, mobile access configured.'},
+            yes: {s:'good', t:'Smart locks deployed. Recommendation: Review access logs weekly, use temporary codes for staff/vendors, revoke codes when no longer needed. Update firmware regularly.'}
+        },
+        accesslogs: {
+            no: {s:'recommended', t:'ACCOUNTABILITY GAP: Implement access logging system. Smart locks provide this automatically. For other entries: Log system or manual documentation. Essential for staff accountability and incident investigation.'},
+            partial: {s:'recommended', t:'Complete access logging on all controlled entries. Review logs weekly for anomalies. Archive logs for minimum 90 days.'},
+            yes: {s:'good', t:'Access logging active. Maintain: Weekly log review, 90+ day retention, anomaly investigation protocol, staff awareness of logging.'}
+        },
+        temp: {
+            no: {s:'recommended', t:'ACCESS MANAGEMENT: Smart lock temporary codes essential for staff/vendor management. Create time-limited codes that auto-expire. Prevents sharing permanent codes. Most smart locks support 50-250 temporary codes.'},
+            partial: {s:'recommended', t:'Implement temporary code system for all staff and vendors. Policy: All access via temporary codes, never permanent codes, immediate revocation upon job completion.'},
+            yes: {s:'good', t:'Temporary code system active. Maintain: Create time-limited codes only, revoke immediately after use, never share permanent codes, weekly code audit.'}
+        },
+        automated: {
+            no: {s:'recommended', t:'CONVENIENCE & SECURITY: Automated gates with remote monitoring provide security and convenience. Features: Remote open/close, status alerts, integration with access control. Upgrade existing manual gates or ensure automation functional.'},
+            partial: {s:'recommended', t:'Complete gate automation setup. Configure: Remote access, status monitoring, integration with smart home/security system, alert on gate left open.'},
+            yes: {s:'good', t:'Gate automation functional. Maintain: Regular mechanism testing, battery backup verified, mobile access working, alerts configured.'}
+        },
+        intercom: {
+            no: {s:'important', t:'VISITOR SCREENING: Video intercom essential for identifying visitors before granting access. Modern systems integrate with smart phones. Cost: $200-1,000 depending on features. Essential for gated properties.'},
+            partial: {s:'recommended', t:'Upgrade intercom to video if audio-only. Ensure: Clear video quality, integration with mobile app, recording capability, night vision.'},
+            yes: {s:'good', t:'Video intercom operational. Maintain: Camera cleaned monthly, mobile app access configured, recording storage adequate, night vision functional.'}
+        },
+        smarthome: {
+            no: {s:'recommended', t:'AUTOMATION ENHANCEMENT: Integrate security devices for automated responses. Examples: \'Away mode\' arms alarm + locks doors + closes garage. \'Bedtime\' locks all + arms perimeter. Platform: $100-300 + integration time.'},
+            partial: {s:'recommended', t:'Expand automation scenarios. Recommended: Away mode, bedtime mode, vacation mode, alert mode (all lights on + cameras record if alarm). Test scenarios monthly.'},
+            yes: {s:'good', t:'Security automation in place. Recommendation: Add geofencing for automatic away/home modes, voice control backup, integration testing quarterly.'}
+        },
+        geofence: {
+            no: {s:'recommended', t:'CONVENIENCE ENHANCEMENT: Geofencing uses phone location to auto-arm/disarm system. Reduces false alarms from forgetting to disarm. Configure geofence radius (typically 500ft-1 mile). Verify all family members\' phones enrolled.'},
+            partial: {s:'recommended', t:'Complete geofencing setup. All family members enrolled, appropriate radius set, backup manual control maintained. Monitor for reliability.'},
+            yes: {s:'good', t:'Geofencing active. Maintain: All family phones enrolled, radius optimized, manual override available, reliability monitored monthly.'}
+        },
+        generator: {
+            no: {s:'important', t:'CRITICAL INFRASTRUCTURE per NFPA 110: Install backup generator with automatic transfer switch (ATS) for security systems, cameras, gates, communication. Sizing: Calculate critical load (security systems typically 5-15kW). Whole-house: 20-25kW ($5,000-15,000 installed). Partial critical systems: 10-15kW ($3,000-7,000). Fuel options: Natural gas (continuous supply, requires gas line), propane (250-500 gal tank, $1,000-3,000), diesel (50-100 gal tank, requires fuel stabilizer). ATS: 10-second transfer time maximum. Essential for extended outages. Installation requires licensed electrician and building permit.'},
+            partial: {s:'recommended', t:'Verify generator covers ALL critical security systems per NFPA 110 Level 2 (Type 10): alarm panel, NVR/cameras, gate operators, garage door, external lighting, communication systems. Test monthly with full load transfer (30+ minutes runtime). Service annually by certified technician. Fuel adequate for 48+ hours continuous operation at full load.'},
+            yes: {s:'good', t:'Backup generator compliant with NFPA 110. Maintain: Monthly automatic exercise with load transfer (30+ minutes), oil change per manufacturer schedule (typically 200 hours or annually), annual professional service with load bank testing, fuel quality testing (diesel: biocide additive every 6 months), battery load test quarterly, ATS transfer test monthly, fuel capacity verified for 48+ hour runtime.'}
+        },
+        ups: {
+            no: {s:'critical', t:'IMMEDIATE NEED: Install UPS for alarm panel, NVR, and critical cameras. Provides power during switch to generator and brief outages. UPS for alarm: $100-300. NVR/cameras: $200-600. Minimum 4-hour runtime.'},
+            partial: {s:'important', t:'Verify UPS capacity adequate for 4+ hour runtime of all connected devices. Test monthly by unplugging UPS. Replace batteries every 3-5 years.'},
+            yes: {s:'good', t:'UPS systems deployed. Maintain: Monthly self-test, annual battery replacement if needed, verify runtime adequate (4+ hours), monitoring of UPS status.'}
+        },
+        gen_coverage: {
+            no: {s:'recommended', t:'COMPREHENSIVE BACKUP: Extend generator coverage beyond security to maintain habitability. Include: HVAC, lighting, gates, garage, refrigeration. Improves comfort and security during extended outages.'},
+            partial: {s:'recommended', t:'Verify comprehensive generator coverage. Test all systems under generator power. Ensure automatic transfer and adequate runtime.'},
+            yes: {s:'good', t:'Comprehensive generator coverage. Maintain: All critical systems on backup, monthly full-system test, fuel adequate for 48+ hours continuous operation.'}
+        },
+        gen_test: {
+            no: {s:'important', t:'MAINTENANCE CRITICAL: Generators require regular testing to ensure reliability. Monthly exercise under load (30+ minutes), annual professional service, oil changes per schedule. Failure to maintain = failure to function.'},
+            partial: {s:'recommended', t:'Formalize generator maintenance program. Monthly exercise with load, quarterly inspection, annual professional service, fuel quality testing, battery maintenance.'},
+            yes: {s:'good', t:'Generator maintenance program active. Maintain: Monthly exercise with load transfer, quarterly self-inspection, annual professional service, fuel additives, battery charge verification.'}
+        },
+        fuel: {
+            no: {s:'recommended', t:'FUEL PLANNING: Ensure adequate fuel for extended outages. Natural gas: Continuous supply. Propane: 250-500 gallon tank minimum. Diesel: 50-100 gallon minimum. Calculate based on generator load and runtime needs.'},
+            partial: {s:'recommended', t:'Verify fuel adequate for 48+ hour continuous operation of critical loads. Implement fuel monitoring and automatic reorder if possible.'},
+            yes: {s:'good', t:'Adequate fuel storage. Maintain: Fuel level monitoring, automatic delivery setup, fuel stabilizer for diesel/gas, tank inspection annually.'}
+        },
+        vlan: {
+            no: {s:'critical', t:'CRITICAL CYBER VULNERABILITY per NIST Cybersecurity Framework: Security devices on same network as IoT/internet devices creates attack vector. Implement network segmentation immediately: Security VLAN (cameras, alarms, access control - no internet), IoT VLAN (smart devices - restricted internet), Guest VLAN (visitors - isolated), Management VLAN (network admin). Requires: Managed Layer 3 switch ($200-500) or enterprise router with VLAN capability. Professional network configuration recommended ($500-1,500). Firewall rules: Deny inter-VLAN by default, allow specific required traffic only. Enable: Private VLAN (PVLAN) for additional isolation.'},
+            partial: {s:'important', t:'Complete network segmentation per zero-trust principles. Security devices must be completely isolated from internet-connected devices with firewall rules enforcing separation. IoT devices on separate VLAN with restricted internet (whitelist only). Document VLAN architecture, maintain firewall rule set, professional IT security audit recommended annually ($1,000-3,000). Implement: MAC address filtering, port security, DHCP snooping.'},
+            yes: {s:'good', t:'Network properly segmented per security best practices. Maintain: Strict firewall rules between VLANs (deny-all default), quarterly security audits of rule sets, firmware updates monthly, MAC address authentication, intrusion detection between VLANs, logging enabled for inter-VLAN traffic, professional annual penetration testing ($2,000-5,000), no cross-VLAN access except documented business need.'}
+        },
+        firewall: {
+            no: {s:'important', t:'UPGRADE RECOMMENDED: Consumer routers inadequate for high-profile security. Install enterprise firewall: Ubiquiti UniFi ($300-500), Fortinet ($500-1,500), or similar. Features: IDS/IPS, content filtering, VPN, detailed logging.'},
+            partial: {s:'recommended', t:'Verify firewall properly configured: IDS/IPS enabled, logging active, automatic updates, VPN for remote access, geo-blocking if appropriate.'},
+            yes: {s:'good', t:'Enterprise firewall deployed. Maintain: Monthly log review, quarterly rule audit, firmware updates, intrusion attempt monitoring, professional annual review.'}
+        },
+        iot: {
+            no: {s:'critical', t:'CRITICAL CYBER RISK: IoT devices are attack vectors. IMMEDIATE: Create device inventory, change ALL default passwords, update all firmware, disable unused features, isolate on separate VLAN. Many breaches occur through IoT.'},
+            partial: {s:'important', t:'Complete IoT hardening: All devices on inventory, passwords changed, firmware current, unnecessary services disabled, devices on isolated VLAN, regular update schedule.'},
+            yes: {s:'good', t:'IoT devices secured. Maintain: Quarterly firmware updates, password rotation annually, remove/replace devices without security patches, monitor for unusual network activity.'}
+        },
+        vpn: {
+            no: {s:'recommended', t:'REMOTE ACCESS SECURITY: Never expose security systems directly to internet. Use VPN for remote access. Most enterprise firewalls include VPN server. Alternative: Cloud-based solutions with proper encryption.'},
+            partial: {s:'recommended', t:'Verify VPN properly configured: Strong encryption, two-factor authentication, logging enabled, regular password changes, limited access.'},
+            yes: {s:'good', t:'VPN for remote access active. Maintain: Strong passwords, two-factor authentication, regular access audits, firmware updates, connection logging reviewed.'}
+        },
+        mfa: {
+            no: {s:'critical', t:'CRITICAL ACCOUNT SECURITY: Enable MFA on ALL accounts: alarm monitoring, camera apps, smart locks, gate controls. Use authenticator app (Google/Microsoft Authenticator) not SMS. Prevents account takeover attacks.'},
+            partial: {s:'important', t:'Enable MFA on all remaining security-related accounts. Use authenticator apps, not SMS when possible. Verify backup codes stored securely.'},
+            yes: {s:'good', t:'MFA enabled on all accounts. Recommendation: Use hardware security keys (YubiKey) for critical accounts, review authorized devices quarterly, revoke unused access.'}
+        },
+        updates: {
+            no: {s:'important', t:'SECURITY MAINTENANCE: Outdated firmware contains vulnerabilities. Implement update schedule: Monthly check, automatic updates where available, critical security patches within 48 hours. Most breaches exploit known vulnerabilities.'},
+            partial: {s:'recommended', t:'Complete update program: All devices on schedule, automatic updates enabled where possible, manual quarterly review for devices requiring manual updates.'},
+            yes: {s:'good', t:'Update program active. Maintain: Automated updates enabled, manual devices updated quarterly, critical patches within 48 hours, update log maintained.'}
+        },
+        wifi: {
+            no: {s:'important', t:'WIRELESS SECURITY: Upgrade to WPA3 encryption (or WPA2 minimum). Hide SSID for security network (cameras, alarms). Use strong unique password (20+ characters). Separate guest network for visitors.'},
+            partial: {s:'recommended', t:'Complete wireless security: WPA3 encryption, security network SSID hidden, strong unique passwords, guest network isolated, regular password rotation.'},
+            yes: {s:'good', t:'Wireless security adequate. Maintain: WPA3 encryption, hidden SSID for security devices, quarterly password changes, guest network isolated, no WPS enabled.'}
+        },
+        ids: {
+            no: {s:'recommended', t:'ADVANCED CYBER DEFENSE: IDS/IPS monitors network for suspicious activity and blocks attacks. Included in enterprise firewalls or standalone (Snort, Suricata). Essential for high-profile targets. Requires professional setup.'},
+            partial: {s:'recommended', t:'Complete IDS/IPS deployment and tuning. Verify: Active monitoring, alerts configured, blocking rules appropriate, regular rule updates, false positive tuning.'},
+            yes: {s:'good', t:'IDS/IPS active. Maintain: Weekly alert review, monthly rule updates, quarterly tuning, annual professional audit, attack attempt documentation.'}
+        },
+        patches: {
+            no: {s:'important', t:'END-OF-LIFE VULNERABILITY: Devices without security updates are vulnerabilities. Audit all IoT devices, identify those without support, replace or remove from network. No exceptions for convenience.'},
+            partial: {s:'recommended', t:'Complete end-of-life device audit. All unsupported devices removed or replaced. Maintain policy: No devices without active security support.'},
+            yes: {s:'good', t:'Only supported devices on network. Maintain: Quarterly audit, immediate removal of end-of-life devices, vendor support verification before purchase.'}
+        },
+        cyber: {
+            no: {s:'recommended', t:'EXECUTIVE PROTECTION ENHANCEMENT: For high-profile clients, add cyber monitoring: Dark web scanning for leaked credentials/PII, data broker removal service, reputation monitoring. Cost: $20-200/month depending on service level.'},
+            partial: {s:'recommended', t:'Expand cyber monitoring coverage. Recommended services: Identity theft protection, dark web monitoring, data broker opt-out, social media monitoring, threat intelligence for executives.'},
+            yes: {s:'good', t:'Cyber monitoring active. Review alerts weekly, respond to credential leaks immediately (password changes), maintain data broker opt-out annually, threat briefings quarterly.'}
+        },
+        // OPERATIONAL
+        varied: {
+            no: {s:'important', t:'CRITICAL OPSEC FAILURE: Predictable patterns enable surveillance and planning. IMMEDIATE: Vary departure times ±30 minutes minimum, use multiple routes, randomize gym/coffee/activities timing. High-threat clients: Consider professional advance work.'},
+            partial: {s:'recommended', t:'Increase pattern variation. Target: No routine should be predictable within 1-hour window. Multiple route options for regular destinations. Monitor for surveillance indicators.'},
+            yes: {s:'good', t:'Pattern management active. Maintain: Route variation, timing randomization, situational awareness, counter-surveillance awareness training for family.'}
+        },
+        routes: {
+            no: {s:'important', t:'ROUTE PREDICTABILITY: Using same route daily enables ambush planning. Identify minimum 3 different routes for regular destinations. Vary routes randomly. Brief family/drivers on route selection.'},
+            partial: {s:'recommended', t:'Formalize route management: 3+ routes per destination, random selection, avoid patterns (ex: don\'t use "Monday route"), driver training on route security.'},
+            yes: {s:'good', t:'Route randomization active. Maintain: Regular route review, new route identification, family/driver briefing, surveillance detection awareness.'}
+        },
+        social: {
+            no: {s:'critical', t:'CRITICAL DIGITAL VULNERABILITY: Real-time posts reveal patterns and location. IMMEDIATE CHANGES: Disable geotagging on all devices, delay posts minimum 24-48 hours, never post from home/office, strip EXIF data, limit location references. Family training essential.'},
+            partial: {s:'important', t:'Enforce strict social media discipline: All posts delayed 48+ hours, no geotags, no recognizable backgrounds showing home/regular locations, children\'s school/activities never posted. Regular family retraining.'},
+            yes: {s:'good', t:'Social media OPSEC maintained. Continue: 48+ hour delays, no geotags, background checks on posts, children/staff trained, quarterly social media audit for violations.'}
+        },
+        kids: {
+            no: {s:'critical', t:'HIGHEST PRIORITY: Children are most vulnerable target. IMMEDIATE: School privacy agreement (limited info sharing), varied pickup times/routes, no school identification on social media, driver training in surveillance detection, emergency protocols with school.'},
+            partial: {s:'important', t:'Complete children\'s security program: School privacy protocols, varied transport, driver awareness training, emergency communication plan, school staff briefed on security posture (appropriate level).'},
+            yes: {s:'good', t:'Children\'s security protocols active. Maintain: Quarterly driver training, school liaison communication, route variation, monitoring for surveillance, emergency procedure reviews with children (age-appropriate).'}
+        },
+        travel: {
+            no: {s:'important', t:'VULNERABILITY WINDOW: Travel creates opportunity. Implement: No pre-trip social media, enhanced home security when away (additional monitoring, house-sitting), mail hold, occupancy simulation, limited disclosure of dates/destinations.'},
+            partial: {s:'recommended', t:'Strengthen travel security: Zero pre-trip posting, enhanced monitoring during absence, trusted house-sitter or property management, delayed social media only, vehicle management.'},
+            yes: {s:'good', t:'Travel security protocols in place. Maintain: Social media blackout during travel, enhanced home monitoring, property management active, mail/package hold, return verification before posting.'}
+        },
+        training: {
+            no: {s:'recommended', t:'AWARENESS GAP: Family members are weakest link if untrained. Conduct: Security awareness briefing (age-appropriate), social media training, pattern awareness, surveillance detection basics, emergency procedures. Annual refresher required.'},
+            partial: {s:'recommended', t:'Formalize family training program: Annual security briefing, quarterly reminders, age-appropriate training for children, written protocols provided, testing/drills.'},
+            yes: {s:'good', t:'Family training program active. Maintain: Annual comprehensive training, quarterly drills, age-appropriate updates for children, written protocol review, incident debriefs.'}
+        },
+        background: {
+            no: {s:'critical', t:'CRITICAL INSIDER THREAT: Background checks mandatory for all staff with residence access per FCRA guidelines. IMMEDIATE: Comprehensive checks on current staff - criminal history (federal/state/county 7-year search), credit report (financial access positions), employment verification (3 previous), reference checks (professional + personal). Professional FCRA-compliant service: $50-200 per check. Legal requirement: Written consent, adverse action notification if denied. Annual re-checks recommended for long-term staff. Sex offender registry check mandatory.'},
+            partial: {s:'important', t:'Complete FCRA-compliant background check program: All staff checked before first day of work, annual re-checks for continuing employment, documented verification process, professional PBSA-accredited service used, failed checks = immediate termination with proper adverse action notice. Include: SSN verification, identity validation, address history.'},
+            yes: {s:'good', t:'Background check program active per FCRA requirements. Maintain: Annual re-checks on anniversary, immediate comprehensive checks for new hires (before property access), documentation retention 7 years, professional service verification quarterly, credit monitoring for financial access staff, sex offender registry monitoring.'}
+        },
+        ndas: {
+            no: {s:'important', t:'LEGAL PROTECTION GAP: All staff must sign NDAs covering: residence details, security measures, family information, schedules. Attorney-drafted NDA essential. Existing staff sign retroactively. New staff sign before first day.'},
+            partial: {s:'recommended', t:'Verify all NDAs current and comprehensive. Should cover: security details, family information, technology, schedules, social media prohibition, penalty clauses. Annual re-signature recommended.'},
+            yes: {s:'good', t:'NDA program in place. Maintain: New hire signature before access, annual updates, attorney review of terms, enforcement willingness, staff reminder training annually.'}
+        },
+        staffaccess: {
+            no: {s:'important', t:'ACCESS CONTROL NEEDED: Implement: Formal key control (logged, limited distribution), access restrictions (staff areas only unless escorted), smart locks with individual codes, access logging. Staff should have minimum access required for duties.'},
+            partial: {s:'recommended', t:'Complete access control program: All staff on individual codes/keys, access logging reviewed weekly, escorts required for unrestricted areas, key inventory quarterly, immediate revocation upon termination.'},
+            yes: {s:'good', t:'Access control active. Maintain: Weekly log review, quarterly key inventory, access revocation within 24 hours of termination, smart lock code rotation after staff changes.'}
+        },
+        stafflog: {
+            no: {s:'recommended', t:'ACCOUNTABILITY ENHANCEMENT: Implement staff logging system. Options: Manual sign-in book, electronic access system with automatic logging. Minimum: arrival/departure times, areas accessed. Review weekly for anomalies.'},
+            partial: {s:'recommended', t:'Complete logging system. All staff sign-in/out, electronic logging if available, weekly management review, anomaly investigation protocol, logs retained 90+ days.'},
+            yes: {s:'good', t:'Staff logging active. Maintain: 100% compliance with sign-in/out, weekly log review, anomaly investigation, electronic system preferred, log retention 90+ days minimum.'}
+        },
+        vendors: {
+            no: {s:'important', t:'SECURITY GAP: All vendors must be vetted. Implement: Approved vendor list, background check requirement for regular vendors, ID verification at entry, vehicle inspection, escort requirement. No unannounced/unvetted contractors.'},
+            partial: {s:'recommended', t:'Complete vendor vetting: Background checks for all regular vendors, ID verification always, vehicle logs, escort enforcement, work area restrictions, no access to security systems without supervision.'},
+            yes: {s:'good', t:'Vendor vetting active. Maintain: Approved vendor list current, background check renewals, strict escort policy, work supervision, post-work security verification, vendor vehicle inspections.'}
+        },
+        escorted: {
+            no: {s:'critical', t:'CRITICAL VULNERABILITY: Unescorted vendors are security risk. IMMEDIATE POLICY: All vendors escorted at all times, no exceptions. Staff trained to escort, work areas restricted, security systems covered/disabled during vendor presence, post-work verification sweep.'},
+            partial: {s:'important', t:'Enforce strict escort policy: No exceptions, staff trained on escort duties, vendors briefed on restrictions, work areas only, security system precautions, property inspection after vendor departure.'},
+            yes: {s:'good', t:'Escort policy enforced. Maintain: Staff training on escort procedures, vendor briefing at arrival, restricted work areas, security precautions (cameras covered when needed), post-work security check.'}
+        },
+        briefings: {
+            no: {s:'recommended', t:'STAFF AWARENESS: Conduct regular security briefings for staff. Topics: Threat awareness, emergency procedures, visitor protocols, surveillance indicators, reporting procedures. Frequency: Quarterly minimum, immediate for threat changes.'},
+            partial: {s:'recommended', t:'Formalize staff briefing program: Quarterly scheduled briefings, threat-specific updates as needed, documented attendance, procedure review, Q&A encouraged.'},
+            yes: {s:'good', t:'Staff briefing program active. Maintain: Quarterly scheduled briefings, threat updates as needed, documented attendance, procedure updates, feedback incorporation, professional delivery.'}
+        },
+        turnover: {
+            no: {s:'critical', t:'CRITICAL SECURITY BREACH: Access must be revoked immediately upon termination. IMMEDIATE PROTOCOL: Keys collected, smart lock codes deleted, gate codes changed, alarm codes changed, security briefing on departure procedures. Same-day execution mandatory.'},
+            partial: {s:'important', t:'Complete turnover protocol: Written checklist, immediate access revocation (same day), exit interview, property return verification, NDA reminder, monitoring for post-employment issues. Document all steps.'},
+            yes: {s:'good', t:'Turnover protocol active. Maintain: Same-day access revocation, comprehensive checklist, documentation, verification of all returns, code changes completed before employee leaves property, exit interview includes security reminder.'}
+        },
+        packages: {
+            no: {s:'important', t:'SECURITY & PRIVACY GAP: Porch deliveries reveal occupancy and enable theft. Install: Locking package box ($150-800), delivery to gate house, or off-site package locker. For high-threat: Off-site screening facility.'},
+            partial: {s:'recommended', t:'Enhance package security: All deliveries to locked location, camera coverage of drop point, signature required for valuable items, tracking number verification before acceptance.'},
+            yes: {s:'good', t:'Secure package receipt in place. Maintain: Regular box checks, camera verification of deliveries, tracking monitoring, staff training on suspicious package indicators.'}
+        },
+        screening: {
+            no: {s:'recommended', t:'For high-threat profiles: Implement package screening. Basic: Visual inspection of all packages (damage, unusual weight, strange odors, no return address). Enhanced: X-ray screening ($3,000-15,000), off-site screening service. Staff training in suspicious package indicators.'},
+            partial: {s:'recommended', t:'Complete screening protocol: All packages inspected, staff trained in threat indicators, procedure for suspicious items (isolate, call police), documentation of screening, vendor verification.'},
+            yes: {s:'good', t:'Screening protocol active. Maintain: Staff training annually, procedure updates, suspicious package drills, coordination with local PD, screening equipment maintenance if applicable.'}
+        },
+        unexpected: {
+            no: {s:'recommended', t:'PROTOCOL NEEDED: Establish rule - unexpected packages not opened until verified. Staff/family trained to: Isolate package, verify with sender, check tracking, photograph, call if suspicious. High-threat: Refuse all unexpected packages.'},
+            partial: {s:'recommended', t:'Enforce unexpected package protocol: Always verify before opening, isolation procedure, family/staff training, reporting system for suspicious items, law enforcement contact procedure.'},
+            yes: {s:'good', t:'Unexpected package protocol in place. Maintain: Annual training, procedure review, suspicious package drills, verification before acceptance, documentation of refused packages.'}
+        },
+        mailforward: {
+            no: {s:'recommended', t:'PRIVACY ENHANCEMENT: Reduce deliveries to home address. Options: P.O. Box for mail ($50-200/year), mail forwarding service ($10-30/month), business address for packages. Limits exposure of home address.'},
+            partial: {s:'recommended', t:'Implement comprehensive mail strategy: P.O. Box or forwarding service for routine mail, business address for commercial shipments, home address only for trusted sources.'},
+            yes: {s:'good', t:'Mail privacy program active. Maintain: P.O. Box or forwarding service active, home address protection, address scrubbing from marketing lists, verification of mail security.'}
+        },
+        porch: {
+            no: {s:'recommended', t:'THEFT PREVENTION: Install camera covering package delivery area. Requirements: Clear view of delivery zone, motion activation with alerts, recording, night vision. Integration with doorbell camera ideal. Cost: $100-400.'},
+            partial: {s:'recommended', t:'Enhance package area monitoring: Camera coverage verified, motion alerts configured, recording retention adequate, night vision functional, smartphone alerts enabled.'},
+            yes: {s:'good', t:'Package area monitored. Maintain: Camera operational, motion alerts configured, regular footage review if theft issues, clean lens quarterly, verify night vision functional.'}
+        },
+        socpriv: {
+            no: {s:'critical', t:'CRITICAL DIGITAL EXPOSURE: Public social media enables reconnaissance. IMMEDIATE: Set all accounts private (Facebook, Instagram, Twitter, LinkedIn), review/remove followers, accept only known individuals, children\'s accounts private or deleted, remove geotags from existing posts.'},
+            partial: {s:'important', t:'Complete privacy lockdown: All family accounts private, follower/friend audits quarterly, children\'s accounts heavily restricted or supervised, remove location data, limit personal information visible.'},
+            yes: {s:'good', t:'Social media privacy maintained. Continue: Quarterly follower audits, immediate blocking of suspicious accounts, no location data, delayed posting (48+ hours), children\'s account monitoring, family training.'}
+        },
+        ownership: {
+            no: {s:'important', t:'PRIVACY ENHANCEMENT: Public property records link you to address. Consider: Purchase through LLC/trust ($500-2,000 setup), transfer existing property to trust, use attorney/trustee as record owner. Makes surveillance/targeting more difficult. Attorney consultation recommended.'},
+            partial: {s:'recommended', t:'Complete ownership obscuring: All properties in trust/LLC, no personal names on public records, utility accounts in entity name, mail forwarding, vehicle registration consideration.'},
+            yes: {s:'good', t:'Property ownership obscured. Maintain: Entity filings current, registered agent service active, no personal information in public records, monitor for information leaks.'}
+        },
+        databroker: {
+            no: {s:'important', t:'CRITICAL PRIVACY ACTION: Data brokers expose address, phone, relatives, work history. Use removal service: DeleteMe ($129-199/year), Kanary ($100-180/year), or DIY opt-out (time-intensive). Essential for privacy. Quarterly monitoring needed as data re-appears.'},
+            partial: {s:'recommended', t:'Complete data broker removal across all major sites (50+ sites exist). Use professional service for ongoing monitoring. Verify removals quarterly as information re-aggregates. Family members included.'},
+            yes: {s:'good', t:'Data broker removal active. Maintain: Quarterly monitoring and re-removal, service subscription current, new broker site monitoring, family member coverage, address/phone number rotation consideration.'}
+        },
+        darkweb: {
+            no: {s:'recommended', t:'For high-profile clients: Add dark web monitoring service. Alerts to: Leaked credentials, SSN exposure, address/phone leaks, impersonation. Services: $10-50/month (consumer) or $100-500/month (executive protection level). Early warning of identity theft/targeting.'},
+            partial: {s:'recommended', t:'Upgrade to comprehensive dark web monitoring: Executive-level service, family coverage, immediate alerts, response protocols for exposures, password changes upon detection.'},
+            yes: {s:'good', t:'Dark web monitoring active. Maintain: Weekly alert review, immediate response to credential leaks (password changes), family coverage, service level adequate for threat profile, quarterly threat briefings.'}
+        },
+        phone: {
+            no: {s:'recommended', t:'PHONE PRIVACY: Ensure phone numbers unlisted and unpublished. Enable spam blocking features. Consider: Secondary numbers for public use, VoIP numbers for disposable use, never share primary number publicly.'},
+            partial: {s:'recommended', t:'Complete phone privacy: All numbers unlisted, spam blocking active, separate numbers for public/private use, family members trained not to share numbers.'},
+            yes: {s:'good', t:'Phone privacy maintained. Maintain: Unlisted status, spam blocking enabled, number rotation if compromised, family training on phone security.'}
+        },
+        vehiclereg: {
+            no: {s:'recommended', t:'VEHICLE PRIVACY: In some states, vehicle registration shows home address visible through windshield. Solutions: Use business address, P.O. Box where legal, privacy window tint, park to obscure registration. Prevents address disclosure in public parking.'},
+            partial: {s:'recommended', t:'Complete vehicle privacy measures: Business address or P.O. Box used where legal, registration not visible from exterior, family vehicles included.'},
+            yes: {s:'good', t:'Vehicle registration privacy maintained. Verify: Home address not on visible registration, privacy measures in place, family vehicle compliance.'}
+        },
+        email: {
+            no: {s:'recommended', t:'EMAIL SECURITY: Use separate email addresses for different purposes. Structure: Public/disposable, shopping/commercial, personal/friends, security systems. Prevents cross-contamination if one compromised. Free email services adequate.'},
+            partial: {s:'recommended', t:'Complete email compartmentalization: Minimum 3 separate addresses (public, personal, security), forwarding rules established, family members using structured approach.'},
+            yes: {s:'good', t:'Email compartmentalization active. Maintain: Separate addresses for different purposes, security email never used publicly, regular cleanup of forwarded mail, password uniqueness.'}
+        },
+        photos: {
+            no: {s:'recommended', t:'METADATA EXPOSURE: Photos contain GPS coordinates, device info, timestamp. Strip EXIF data before posting. Tools: Apps like Photo Metadata Remover (free), built-in OS features. Prevents location disclosure through photos.'},
+            partial: {s:'recommended', t:'Enforce metadata stripping: All family members trained, automatic tools installed on devices, verification of stripped data before posting.'},
+            yes: {s:'good', t:'Metadata stripping protocol active. Maintain: Family training, automatic tools on all devices, quarterly reminders, verification of compliance.'}
+        }
+    };
+    
+    // Return recommendation with automatic N/A handling
+    if (recs[id]) {
+        if (val === 'na') {
+            return {s: 'na', t: 'Not applicable to this property. This security measure is not relevant based on property characteristics or threat profile.'};
+        }
+        return recs[id][val] || {
+            s: val === 'no' ? 'critical' : val === 'partial' ? 'important' : 'good',
+            t: `Assessment item "${id}" requires review. Consult security professional for specific recommendations.`
+        };
+    }
+    
+    // Default for unlisted items - provide intelligent defaults based on value
+    if (val === 'na') {
+        return {s: 'na', t: 'Not applicable to this property. This security measure is not relevant based on current property characteristics or threat profile.'};
+    }
+    
+    // Intelligent defaults based on response value
+    if (val === 'no') {
+        return {
+            s: 'critical',
+            t: 'SECURITY GAP IDENTIFIED: This security measure is not currently in place. Recommend immediate implementation according to industry best practices (ASIS International, CPTED principles). Consult certified security professional (CPP/PSP) for site-specific recommendations, cost estimates, and implementation timeline. Priority: High (0-30 days).'
+        };
+    }
+    
+    if (val === 'partial') {
+        return {
+            s: 'important',
+            t: 'ENHANCEMENT NEEDED: This security measure is partially implemented. Complete the implementation to meet industry standards. Review current controls, identify gaps, and develop upgrade plan. Consult security professional for optimization recommendations. Timeline: 30-90 days. Regular testing and maintenance required.'
+        };
+    }
+    
+    // val === 'yes'
+    return {
+        s: 'good',
+        t: 'COMPLIANT: This security measure is in place and meets baseline security standards. Recommendations: Conduct quarterly inspections, maintain equipment/systems in good working order, test procedures regularly, document all maintenance, and review effectiveness annually. Consider enhancements based on evolving threat landscape.'
+    };
+}
+
+// Initialization
+function init() {
+    checkStandalone();
+    render();
+    updateStats();
+}
+
+function checkStandalone() {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isIOS && !isStandalone) {
+        setTimeout(() => {
+            const banner = document.querySelector('.install-banner');
+            if (banner) banner.classList.add('show');
+        }, 3000);
+    }
+}
+
+// Render application
+function render() {
+    const section = SECTIONS[currentTab];
+    let html = `
+        <div class="header">
+            <h1>🛡️ Security Assessment</h1>
+            <p>Executive Protection Evaluation</p>
+            <div class="install-banner">
+                <strong>📱 Install: </strong>Tap Share ⬆️ → "Add to Home Screen"
+            </div>
+            <div class="progress-wrapper">
+                <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+                <div class="progress-text" id="progressText">0% Complete</div>
+            </div>
+        </div>
+        <div class="tabs">
+            ${Object.keys(SECTIONS).map(key => `
+                <span class="tab ${currentTab === key ? 'active' : ''}" onclick="changeTab('${key}')">
+                    ${SECTIONS[key].title}
+                </span>
+            `).join('')}
+        </div>
+        <div class="content">
+            <div class="section-title">${section.title}</div>
+            <div class="section-desc">${section.desc}</div>
+    `;
+
+    if (section.fields) {
+        section.fields.forEach(field => {
+            const val = data[field.id] || '';
+            html += `
+                <div class="form-group">
+                    <label class="label">${field.label}</label>
+                    ${field.type === 'select' ? `
+                        <select onchange="save('${field.id}', this.value)">
+                            <option value="">Select...</option>
+                            ${field.options.map(o => `<option value="${o}" ${val === o ? 'selected' : ''}>${o}</option>`).join('')}
+                        </select>
+                    ` : field.type === 'textarea' ? `
+                        <textarea onchange="save('${field.id}', this.value)" placeholder="${field.placeholder || ''}">${val}</textarea>
+                    ` : `
+                        <input type="text" value="${val}" onchange="save('${field.id}', this.value)" placeholder="${field.placeholder || ''}">
+                    `}
+                </div>
+            `;
+        });
+    } else if (section.subs) {
+        section.subs.forEach(sub => {
+            html += `<div class="subsection">${sub.name}</div>`;
+            sub.items.forEach(itemStr => {
+                const [id, question] = itemStr.split('|');
+                const d = data[id] || {};
+                html += `
+                    <div class="card">
+                        <div class="question">${question}</div>
+                        <div class="toggle-btns">
+                            <button class="toggle-btn yes ${d.v === 'yes' ? 'active' : ''}" onclick="toggle('${id}', 'yes')">✓ YES</button>
+                            <button class="toggle-btn partial ${d.v === 'partial' ? 'active' : ''}" onclick="toggle('${id}', 'partial')">◐ PARTIAL</button>
+                            <button class="toggle-btn no ${d.v === 'no' ? 'active' : ''}" onclick="toggle('${id}', 'no')">✗ NO</button>
+                            <button class="toggle-btn na ${d.v === 'na' ? 'active' : ''}" onclick="toggle('${id}', 'na')">— N/A</button>
+                        </div>
+                        ${['yes', 'partial', 'no', 'na'].map(v => {
+                            const rec = getRec(id, v);
+                            return `<div class="rec ${d.v === v ? 'show' : ''}" id="rec-${id}-${v}">
+                                <div class="badge badge-${rec.s}">${rec.s}</div>
+                                <div>${rec.t}</div>
+                            </div>`;
+                        }).join('')}
+                        <textarea class="notes" placeholder="Additional notes..." onchange="saveNote('${id}', this.value)">${d.n || ''}</textarea>
+                    </div>
+                `;
+            });
+        });
+    }
+
+    html += `
+        </div>
+        <div class="bottom-bar">
+            <div class="stats">
+                <div class="stat"><div class="stat-value" id="statDone">0</div><div class="stat-label">Done</div></div>
+                <div class="stat"><div class="stat-value" id="statCritical">0</div><div class="stat-label">Critical</div></div>
+                <div class="stat"><div class="stat-value" id="statIssues">0</div><div class="stat-label">Issues</div></div>
+                <div class="stat"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total</div></div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="clearData()">🗑️ Clear</button>
+                <button class="btn btn-primary" onclick="generate()">📄 Report</button>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('app').innerHTML = html;
+}
+
+function changeTab(tab) {
+    currentTab = tab;
+    render();
+    updateStats();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function save(id, val) {
+    data[id] = val;
+    localStorage.setItem('securityAssessment', JSON.stringify(data));
+    updateStats();
+    showToast('💾 Saved');
+}
+
+function toggle(id, val) {
+    if (!data[id]) data[id] = {};
+    data[id].v = val;
+    localStorage.setItem('securityAssessment', JSON.stringify(data));
+    
+    // Remove active class from ALL buttons for this item (fixed selector)
+    document.querySelectorAll(`button[onclick*="toggle('${id}',"]`).forEach(btn => btn.classList.remove('active'));
+    // Add active class to the clicked button
+    document.querySelector(`button[onclick="toggle('${id}', '${val}')"]`).classList.add('active');
+    
+    // Hide all recommendations for this item
+    document.querySelectorAll(`[id^="rec-${id}-"]`).forEach(rec => rec.classList.remove('show'));
+    // Show the selected recommendation
+    const recEl = document.getElementById(`rec-${id}-${val}`);
+    if (recEl) recEl.classList.add('show');
+    
+    updateStats();
+    showToast('💾 Saved');
+}
+
+function saveNote(id, note) {
+    if (!data[id]) data[id] = {};
+    data[id].n = note;
+    localStorage.setItem('securityAssessment', JSON.stringify(data));
+    showToast('💾 Note saved');
+}
+
+function updateStats() {
+    let total = 0, done = 0, critical = 0, issues = 0;
+    
+    Object.values(SECTIONS).forEach(sec => {
+        if (sec.fields) total += sec.fields.length;
+        else if (sec.subs) {
+            sec.subs.forEach(sub => {
+                total += sub.items.length;
+                sub.items.forEach(itemStr => {
+                    const id = itemStr.split('|')[0];
+                    if (data[id]?.v) {
+                        if (data[id].v === 'no') critical++;
+                        if (data[id].v !== 'yes' && data[id].v !== 'na') issues++;
+                    }
+                });
+            });
+        }
+    });
+
+    done = Object.keys(data).filter(k => data[k]?.v || (typeof data[k] === 'string' && data[k])).length;
+    const pct = Math.round((done / total) * 100);
+
+    const bar = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+    if (bar) bar.style.width = pct + '%';
+    if (text) text.textContent = pct + '% Complete (' + done + '/' + total + ')';
+    
+    const statDone = document.getElementById('statDone');
+    const statCritical = document.getElementById('statCritical');
+    const statIssues = document.getElementById('statIssues');
+    const statTotal = document.getElementById('statTotal');
+    if (statDone) statDone.textContent = done;
+    if (statCritical) statCritical.textContent = critical;
+    if (statIssues) statIssues.textContent = issues;
+    if (statTotal) statTotal.textContent = total;
+}
+
+async function generate() {
+    // Check if libraries are loaded
+    if (!window.jspdf || !window.Chart) {
+        alert('PDF libraries are still loading. Please wait a moment and try again.');
+        console.error('Libraries not loaded:', { jspdf: !!window.jspdf, Chart: !!window.Chart });
+        // Fallback to text report
+        generateTextReport();
+        return;
+    }
+    
+    try {
+        await generatePDFReport();
+    } catch (error) {
+        console.error('PDF generation failed:', error);
+        alert('PDF generation encountered an error. Generating text report instead.');
+        generateTextReport();
+    }
+}
+
+async function generatePDFReport() {
+    const today = new Date().toLocaleDateString();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Collect findings
+    let findings = [];
+    Object.values(SECTIONS).forEach(sec => {
+        if (sec.subs) {
+            sec.subs.forEach(sub => {
+                sub.items.forEach(itemStr => {
+                    const [id, question] = itemStr.split('|');
+                    const d = data[id];
+                    if (d?.v) {
+                        findings.push({
+                            section: sec.title,
+                            subsection: sub.name,
+                            q: question,
+                            v: d.v,
+                            r: getRec(id, d.v),
+                            n: d.n
+                        });
+                    }
+                });
+            });
+        }
+    });
+
+    const critical = findings.filter(f => f.r.s === 'critical');
+    const important = findings.filter(f => f.r.s === 'important');
+    const recommended = findings.filter(f => f.r.s === 'recommended');
+    const good = findings.filter(f => f.r.s === 'good');
+    const na = findings.filter(f => f.r.s === 'na');
+    
+    let pageNum = 1;
+    
+    // Helper function for page footer
+    const addFooter = () => {
+        doc.setFontSize(8);
+        doc.setTextColor(128, 128, 128);
+        doc.text(`Page ${pageNum}`, 105, 285, { align: 'center' });
+        doc.setTextColor(200, 0, 0);
+        doc.text('CONFIDENTIAL', 20, 285);
+        pageNum++;
+    };
+    
+    // ===== COVER PAGE =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 0, 220, 50, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(28);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Residential Security Assessment', 105, 25, { align: 'center' });
+    doc.setFontSize(16);
+    doc.text('Executive Summary Report', 105, 35, { align: 'center' });
+    
+    doc.setTextColor(200, 0, 0);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('CONFIDENTIAL', 105, 60, { align: 'center' });
+    
+    // Property info box
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    let yPos = 80;
+    doc.text('Property:', 30, yPos);
+    doc.text(data.propName || 'Not specified', 80, yPos);
+    yPos += 8;
+    doc.text('Address:', 30, yPos);
+    doc.text(data.address || 'Not specified', 80, yPos);
+    yPos += 8;
+    doc.text('Assessment Date:', 30, yPos);
+    doc.text(today, 80, yPos);
+    yPos += 8;
+    doc.text('Threat Level:', 30, yPos);
+    doc.text(data.threat || 'Not specified', 80, yPos);
+    
+    // Legal Disclaimer Box
+    doc.setDrawColor(200, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.rect(20, 130, 170, 90);
+    
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(200, 0, 0);
+    doc.text('LEGAL DISCLAIMER', 105, 140, { align: 'center' });
+    
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(0, 0, 0);
+    const disclaimer = [
+        'This security assessment is provided for informational purposes only and does not constitute',
+        'a guarantee of safety or security. The assessor makes no warranties, express or implied,',
+        'regarding the completeness, accuracy, or effectiveness of the recommendations herein.',
+        '',
+        'LIMITATION OF LIABILITY: The assessor shall not be liable for any direct, indirect, incidental,',
+        'consequential, or punitive damages arising from use of this report or implementation of',
+        'recommendations. Client assumes all risk and responsibility for security decisions.',
+        '',
+        'NO GUARANTEE: Security measures reduce but cannot eliminate risk. No security system is',
+        'impenetrable. Criminal activity may occur despite implementation of recommendations.',
+        '',
+        'PROFESSIONAL ADVICE: This report does not constitute legal, insurance, or professional',
+        'advice. Client should consult appropriate licensed professionals before implementing',
+        'recommendations. Compliance with local codes and regulations is client\'s responsibility.',
+        '',
+        'INDEMNIFICATION: Client agrees to indemnify and hold harmless the assessor from any',
+        'claims, damages, or liabilities arising from use of this report or security incidents.',
+    ];
+    
+    let disclaimerY = 148;
+    disclaimer.forEach(line => {
+        doc.text(line, 25, disclaimerY, { maxWidth: 160 });
+        disclaimerY += 4;
+    });
+    
+    addFooter();
+    doc.addPage();
+    
+    // ===== EXECUTIVE SUMMARY =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Executive Summary', 105, 18, { align: 'center' });
+    
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    yPos = 35;
+    
+    const summaryText = [
+        `This comprehensive security assessment evaluated ${findings.length} security parameters across`,
+        `six critical areas. The assessment identified ${critical.length} critical vulnerabilities requiring`,
+        `immediate attention and ${important.length} important issues needing priority remediation.`,
+        '',
+        `Assessment Results:`,
+        `  • ${good.length} items meet or exceed industry standards (${Math.round(good.length/findings.length*100)}%)`,
+        `  • ${recommended.length} items partially comply and require enhancement`,
+        `  • ${important.length} items represent significant security gaps`,
+        `  • ${critical.length} items are critical vulnerabilities`,
+        `  • ${na.length} items not applicable to this property`,
+    ];
+    
+    summaryText.forEach(line => {
+        doc.text(line, 20, yPos);
+        yPos += 6;
+    });
+    
+    // Create pie chart for compliance overview
+    yPos += 10;
+    const chartCanvas = document.createElement('canvas');
+    chartCanvas.width = 400;
+    chartCanvas.height = 400;
+    
+    const pieChart = new Chart(chartCanvas, {
+        type: 'pie',
+        data: {
+            labels: ['Compliant', 'Partial', 'Non-Compliant', 'N/A'],
+            datasets: [{
+                data: [good.length, recommended.length + important.length, critical.length, na.length],
+                backgroundColor: ['#00c896', '#ffb020', '#ff4757', '#94a3b8'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 14 }, padding: 15 } },
+                title: { display: true, text: 'Security Compliance Overview', font: { size: 16, weight: 'bold' } }
+            }
+        }
+    });
+    
+    // Wait for chart to render
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const chartImage = chartCanvas.toDataURL('image/png');
+    doc.addImage(chartImage, 'PNG', 40, yPos, 130, 130);
+    
+    addFooter();
+    doc.addPage();
+    
+    // ===== CRITICAL FINDINGS =====
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Critical Findings & Recommendations', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    
+    if (critical.length > 0) {
+        critical.slice(0, 8).forEach((f, i) => {
+            if (yPos > 240) {
+                addFooter();
+                doc.addPage();
+                yPos = 25;
+            }
+            
+            doc.setFillColor(255, 229, 229);
+            doc.rect(15, yPos - 5, 180, 8, 'F');
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(200, 0, 0);
+            doc.text(`Finding #${i+1} [CRITICAL]`, 20, yPos);
+            yPos += 8;
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Issue:', 20, yPos);
+            doc.setFont('helvetica', 'normal');
+            const issueLines = doc.splitTextToSize(f.q, 160);
+            doc.text(issueLines, 40, yPos);
+            yPos += (issueLines.length * 5) + 3;
+            
+            doc.setFont('helvetica', 'bold');
+            doc.text('Recommendation:', 20, yPos);
+            doc.setFont('helvetica', 'normal');
+            const recLines = doc.splitTextToSize(f.r.t, 140);
+            doc.text(recLines, 50, yPos);
+            yPos += (recLines.length * 4) + 2;
+            
+            if (f.n) {
+                doc.setFont('helvetica', 'italic');
+                doc.text('Notes: ' + f.n, 20, yPos);
+                yPos += 5;
+            }
+            
+            yPos += 8;
+        });
+    } else {
+        doc.setFontSize(10);
+        doc.text('No critical findings identified.', 20, yPos);
+    }
+    
+    addFooter();
+    
+    // ===== SECTION BREAKDOWN =====
+    doc.addPage();
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Detailed Section Assessment', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    
+    // Group findings by section
+    const sectionGroups = {};
+    findings.forEach(f => {
+        if (!sectionGroups[f.section]) sectionGroups[f.section] = [];
+        sectionGroups[f.section].push(f);
+    });
+    
+    Object.keys(sectionGroups).forEach(section => {
+        if (yPos > 250) {
+            addFooter();
+            doc.addPage();
+            yPos = 25;
+        }
+        
+        const items = sectionGroups[section];
+        const sectionGood = items.filter(f => f.r.s === 'good').length;
+        const sectionTotal = items.length;
+        const compliance = Math.round((sectionGood / sectionTotal) * 100);
+        
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(46, 117, 182);
+        doc.text(section, 20, yPos);
+        yPos += 7;
+        
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Compliance Rate: ${compliance}% | Total: ${sectionTotal} | Compliant: ${sectionGood}`, 20, yPos);
+        yPos += 10;
+    });
+    
+    addFooter();
+    
+    // ===== RECOMMENDATIONS SUMMARY =====
+    doc.addPage();
+    doc.setFillColor(46, 117, 182);
+    doc.rect(0, 10, 220, 12, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Implementation Priorities', 105, 18, { align: 'center' });
+    
+    yPos = 35;
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    
+    const priorities = [
+        '',
+        'IMMEDIATE ACTIONS (0-30 Days):',
+        `  • Address ${critical.length} critical vulnerabilities identified`,
+        '  • Engage licensed security contractors for quotes',
+        '  • Prioritize perimeter and access control improvements',
+        '  • Implement professional alarm monitoring',
+        '',
+        'PRIORITY ENHANCEMENTS (30-90 Days):',
+        `  • Remediate ${important.length} important security gaps`,
+        '  • Install comprehensive camera surveillance system',
+        '  • Upgrade door and window security hardware',
+        '  • Establish emergency response protocols',
+        '',
+        'ONGOING IMPROVEMENTS (90+ Days):',
+        '  • Complete remaining recommended enhancements',
+        '  • Implement operational security protocols',
+        '  • Conduct staff security training',
+        '  • Schedule follow-up assessment in 6-12 months',
+        '',
+        'NEXT STEPS:',
+        '  1. Review findings with stakeholders',
+        '  2. Obtain detailed contractor quotes',
+        '  3. Develop phased implementation timeline',
+        '  4. Establish maintenance protocols',
+        '  5. Document all improvements for insurance',
+    ];
+    
+    priorities.forEach(line => {
+        doc.text(line, 20, yPos);
+        yPos += 6;
+    });
+    
+    addFooter();
+    
+    // Save the PDF
+    const fileName = `Security_Assessment_${data.propName || 'Report'}_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName.replace(/[^a-z0-9._-]/gi, '_'));
+    
+    showToast('✅ Professional PDF report generated!');
+}
+
+function generateTextReport() {
+    const today = new Date().toLocaleDateString();
+    let report = '═══════════════════════════════════════════════════════════\n';
+    report += '            RESIDENTIAL SECURITY ASSESSMENT REPORT\n';
+    report += '═══════════════════════════════════════════════════════════\n\n';
+    report += `Assessment Date: ${today}\n\n`;
+    
+    report += '─────────────────────────────────────────────────────────────\n';
+    report += 'PROPERTY INFORMATION\n';
+    report += '─────────────────────────────────────────────────────────────\n';
+    report += `Property: ${data.propName || 'Not specified'}\n`;
+    report += `Address: ${data.address || 'Not specified'}\n`;
+    report += `Threat Level: ${data.threat || 'Not specified'}\n\n`;
+
+    // Collect all findings
+    let findings = [];
+    Object.values(SECTIONS).forEach(sec => {
+        if (sec.subs) {
+            sec.subs.forEach(sub => {
+                sub.items.forEach(itemStr => {
+                    const [id, question] = itemStr.split('|');
+                    const d = data[id];
+                    if (d?.v) {
+                        findings.push({
+                            section: sec.title,
+                            subsection: sub.name,
+                            q: question,
+                            v: d.v,
+                            r: getRec(id, d.v),
+                            n: d.n
+                        });
+                    }
+                });
+            });
+        }
+    });
+
+    const critical = findings.filter(f => f.r.s === 'critical');
+    const important = findings.filter(f => f.r.s === 'important');
+    const recommended = findings.filter(f => f.r.s === 'recommended');
+    const good = findings.filter(f => f.r.s === 'good');
+    const na = findings.filter(f => f.r.s === 'na');
+    
+    report += `ASSESSMENT SUMMARY\n`;
+    report += `─────────────────────────────────────────────────────────────\n`;
+    report += `Total Items Assessed: ${findings.length}\n`;
+    report += `Critical Issues: ${critical.length}\n`;
+    report += `Important Issues: ${important.length}\n`;
+    report += `Recommended: ${recommended.length}\n`;
+    report += `Compliant: ${good.length}\n`;
+    report += `Not Applicable: ${na.length}\n\n`;
+
+    // Critical Findings
+    if (critical.length > 0) {
+        report += `\n═══════════════════════════════════════════════════════════\n`;
+        report += '                    CRITICAL FINDINGS\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
+        critical.forEach((f, i) => {
+            report += `${i+1}. ${f.q}\n`;
+            report += `   Section: ${f.section}\n`;
+            report += `   Recommendation: ${f.r.t}\n`;
+            if (f.n) report += `   Notes: ${f.n}\n`;
+            report += '\n';
+        });
+    }
+
+    // Important Findings
+    if (important.length > 0) {
+        report += `\n═══════════════════════════════════════════════════════════\n`;
+        report += '                   IMPORTANT FINDINGS\n';
+        report += '═══════════════════════════════════════════════════════════\n\n';
+        
+        important.forEach((f, i) => {
+            report += `${i+1}. ${f.q}\n`;
+            report += `   Recommendation: ${f.r.t}\n`;
+            if (f.n) report += `   Notes: ${f.n}\n`;
+            report += '\n';
+        });
+    }
+
+    report += '\n═══════════════════════════════════════════════════════════\n';
+    report += 'END OF REPORT\n';
+    report += '═══════════════════════════════════════════════════════════\n';
+
+    // Download as text file
+    const blob = new Blob([report], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const fileName = `Security_Assessment_${data.propName || 'Report'}_${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = fileName.replace(/[^a-z0-9._-]/gi, '_');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showToast('✅ Text report downloaded!');
+}
+
+function clearData() {
+    if (confirm('⚠️ Clear all data? This cannot be undone.')) {
+        localStorage.removeItem('securityAssessment');
+        data = {};
+        render();
+        updateStats();
+        showToast('🗑️ Cleared');
+    }
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+window.onload = init;
+    </script>
+    <!-- Load PDF generation libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script>
+    // Verify libraries loaded
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            console.log('Libraries status:', { jsPDF: !!window.jspdf, Chart: !!window.Chart });
+            if (window.jspdf && window.Chart) {
+                console.log('✅ PDF libraries loaded successfully');
+            } else {
+                console.error('❌ PDF libraries failed to load');
+            }
+        }, 1000);
+    });
+    </script>
+</body>
+</html>
